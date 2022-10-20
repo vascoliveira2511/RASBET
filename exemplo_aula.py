@@ -1,17 +1,18 @@
 from email.header import Header
 import http.client
+from itertools import count
 import json
 
-conn = http.client.HTTPSConnection("ucras.di.uminho.pt")
-payload = ''
-headers = {}
-conn.request("GET", "/v1/games", payload, headers)
-res = conn.getresponse()
-data = res.read()
+conn = http.client.HTTPConnection("ucras.di.uminho.pt")  # Conexão HTTP
+payload = ''  # Payload
+headers = {}  # Cabeçalhos
+conn.request("GET", "/v1/games/", payload, headers)  # Pedido GET
+res = conn.getresponse()  # Resposta
+data = res.read()  # Dados
 
-games = json.loads(data)
+games = json.loads(data)  # Dados em JSON
 
-away_team = games[0].get('away_team')
-home_team = games[0].get('home_team')
+awayTeam = games[0]['awayTeam']  # Equipa visitante
+homeTeam = games[0]['homeTeam']  # Equipa da casa
 
-print(f"{home_team} vs {away_team}")
+print(f"{awayTeam} x {homeTeam}")  # Nome das equipas

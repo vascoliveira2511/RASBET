@@ -17,4 +17,7 @@ def getData():
 
 def main():
     games = getData()
-    print(games[0]['away_team'])
+
+
+if __name__ == "__main__":
+    main()

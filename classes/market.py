@@ -1,5 +1,5 @@
 
-class market:  # Class for the market
+class Market:  # Class for the market
 
     def __init__(self, key, outcomes):  # Constructor
         self.key = key  # Market key

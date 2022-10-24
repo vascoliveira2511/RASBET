@@ -1,5 +1,5 @@
 
-class game:  # Class for the game itself
+class Game:  # Class for the game itself
 
     def __init__(self, id, homeTeam, awayTeam, commenceTime, completed, bookmakers, scores):  # Constructor
         self.id = id  # Game id

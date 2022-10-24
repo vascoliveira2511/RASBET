@@ -1,4 +1,4 @@
-class outcome:  # Outcome of a bet
+class Outcome:  # Outcome of a bet
 
     def __init__(self, name, price):  # Constructor
         self.name = ""  # Name of the outcome

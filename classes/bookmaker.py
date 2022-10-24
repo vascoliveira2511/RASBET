@@ -1,4 +1,4 @@
-class bookmaker:  # Class for bookmaker
+class Bookmaker:  # Class for bookmaker
 
     def __init__(self, key, lastUpdate, markets):  # Constructor
         self.key = key  # Bookmaker key

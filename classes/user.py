@@ -1,21 +1,24 @@
 import data
-import models
 
 
-class user:  # Class for user
+class User:  # Class for user
 
-    def __init__(self, name, email, bets, type):  # Constructor
+    def __init__(self, name, email, bets, wallet, type):  # Constructor
         self.name = name  # Name of the user
         self.email = email  # Email of the user
         self.logged = True  # Is the user logged in?
         self.bets = bets  # List of bets
         self.type = type  # 0 - admin, 1 - special, 2 - normal user
+        self.wallet = wallet  # Wallet of the user
 
     def getName(self):  # Get name of the user
         return self.name
 
     def getEmail(self):  # Get email of the user
         return self.email
+
+    def getWallet(self):  # Get wallet of the user
+        return self.wallet
 
     def getBets(self):  # Get list of bets
         return self.bets
@@ -41,6 +44,15 @@ class user:  # Class for user
     def setType(self, type):  # Set type of the user
         self.type = type
 
+    def setWallet(self, wallet):  # Set wallet of the user
+        self.wallet = wallet
+
+    def deposit(self, amount):  # Deposit money to the wallet
+        self.wallet += amount
+
+    def withdraw(self, amount):  # Withdraw money from the wallet
+        self.wallet -= amount
+
     def logout(self):  # Logout the user
         self.setLogged(False)
 
@@ -54,7 +66,7 @@ class user:  # Class for user
         self.bets.remove(bet)
 
     def __eq__(self, other):  # Compare two users
-        return self.name == other.name and self.email == other.email and self.logged == other.logged and self.bets == other.bets and self.type == other.type
+        return self.name == other.name and self.email == other.email and self.logged == other.logged and self.bets == other.bets and self.type == other.type and self.wallet == other.wallet
 
     def __str__(self):  # String representation of user
-        return "Name: " + self.name + " Email: " + self.email + " Logged: " + str(self.logged) + " Bets: " + str(self.bets) + " Type: " + str(self.type) + "\n"
+        return "Name: " + self.name + " Email: " + self.email + " Logged: " + str(self.logged) + " Bets: " + str(self.bets) + " Type: " + str(self.type) + " Wallet: " + str(self.wallet) + "\n"

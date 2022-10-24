@@ -1,5 +1,4 @@
 import data
-import user
 
 
 def getTeams(games):

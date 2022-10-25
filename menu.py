@@ -1,14 +1,14 @@
 import email
 from secrets import choice
 from turtle import pen
-from classes.User import User
+import classes.User as User
 import data
 import sys
 from classes import *
 
 
 games = data.getData()
-user = User('test', 'test', 'test', [], 0, 2)
+user = User.User('test', 'test', 'test', [], 0, 2)
 
 
 def loginMenu():
@@ -38,8 +38,9 @@ def register():
     password = input('Password: ')
     email = input('Email: ')
     print('Registering...')
-    user = User(username, password, email, [], 0, 2)
+    user = User.User(username, email, password, [], 0, 2)
     print('Registered successfully')
+    userMenu()
 
 
 def viewGames():
@@ -95,7 +96,7 @@ def changeUsername():
 
 
 def userMenu():
-    print('1 - Play')
+    print('0 - Play')
     print('1 - View games')
     print('2 - View bets')
     print('3 - View balance')
@@ -108,8 +109,10 @@ def userMenu():
     print('10 - Change email')
     print('11 - Change username')
     choice = input('Choice: ')
-    if choice == '1':
-        viewGames(user)
+    if choice == '0':
+        play()
+    elif choice == '1':
+        viewGames()
     elif choice == '2':
         viewBets(user)
     elif choice == '3':
@@ -168,6 +171,57 @@ def userMenu():
             print("Keep playing?")
             exit = int(input("0 - Yes\n1 - No\nChoose: "))
         userMenu()
+
+
+def viewGames():
+    for game in games:
+        print(game['homeTeam'], game['awayTeam'], game['commenceTime'])
+    userMenu()
+
+
+def viewBets(user):
+    print(user.getBets())
+    userMenu()
+
+
+def viewBalance(user):
+    print(user.getBalance())
+    userMenu()
+
+
+def deposit(user):
+    amount = input('Amount: ')
+    user.deposit(amount)
+    userMenu()
+
+
+def withdraw(user):
+    amount = input('Amount: ')
+    user.withdraw(amount)
+    userMenu()
+
+
+def deleteAccount():
+    user.deleteAccount()
+    loginMenu()
+
+
+def changePassword(user):
+    password = input('Password: ')
+    user.setPassword(password)
+    userMenu()
+
+
+def changeEmail(user):
+    email = input('Email: ')
+    user.setEmail(email)
+    userMenu()
+
+
+def changeUsername(user):
+    username = input('Username: ')
+    user.setUsername(username)
+    userMenu()
 
 
 def main():

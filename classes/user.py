@@ -1,11 +1,13 @@
+from ast import Delete
 import data
 
 
 class User:  # Class for user
 
-    def __init__(self, name, email, bets, wallet, type):  # Constructor
+    def __init__(self, name, email, password, bets, wallet, type):  # Constructor
         self.name = name  # Name of the user
         self.email = email  # Email of the user
+        self.password = password  # Password of the user
         self.logged = True  # Is the user logged in?
         self.bets = bets  # List of bets
         self.type = type  # 0 - admin, 1 - special, 2 - normal user
@@ -29,6 +31,9 @@ class User:  # Class for user
     def getType(self):  # Get type of the user
         return self.type
 
+    def getPassword(self):  # Get password of the user
+        return self.password
+
     def setName(self, name):  # Set name of the user
         self.name = name
 
@@ -47,6 +52,9 @@ class User:  # Class for user
     def setWallet(self, wallet):  # Set wallet of the user
         self.wallet = wallet
 
+    def setPassword(self, password):  # Set password of the user
+        self.password = password
+
     def deposit(self, amount):  # Deposit money to the wallet
         self.wallet += amount
 
@@ -64,6 +72,9 @@ class User:  # Class for user
 
     def removeBet(self, bet):  # Remove bet from the list of bets
         self.bets.remove(bet)
+
+    def deleteAccount(self):
+        del self
 
     def __eq__(self, other):  # Compare two users
         return self.name == other.name and self.email == other.email and self.logged == other.logged and self.bets == other.bets and self.type == other.type and self.wallet == other.wallet

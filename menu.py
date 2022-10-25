@@ -43,58 +43,6 @@ def register():
     userMenu()
 
 
-def viewGames():
-    for game in games:
-        print(game['id'], game['team1'], game['team2'], game['date'],
-              game['time'], game['odds1'], game['oddsx'], game['odds2'])
-    userMenu()
-
-
-def viewBets():
-    print(user.getBets())
-    userMenu()
-
-
-def viewBalance():
-    print(user.getBalance())
-    userMenu()
-
-
-def deposit():
-    amount = input('Amount: ')
-    User.deposit(user, amount)
-    userMenu()
-
-
-def withdraw():
-    amount = input('Amount: ')
-    User.withdraw(user, amount)
-    userMenu()
-
-
-def deleteAccount():
-    User.deleteAccount(user)
-    loginMenu()
-
-
-def changePassword():
-    password = input('Password: ')
-    User.setPassword(user, password)
-    userMenu()
-
-
-def changeEmail():
-    email = input('Email: ')
-    User.setEmail(user, email)
-    userMenu()
-
-
-def changeUsername():
-    username = input('Username: ')
-    User.setUsername(user, username)
-    userMenu()
-
-
 def userMenu():
     print('0 - Play')
     print('1 - View games')

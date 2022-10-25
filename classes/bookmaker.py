@@ -1,3 +1,6 @@
+import sqlite3
+
+
 class Bookmaker:  # Class for bookmaker
 
     def __init__(self, key, lastUpdate, markets):  # Constructor
@@ -22,6 +25,14 @@ class Bookmaker:  # Class for bookmaker
 
     def setMarkets(self, markets):  # Set list of markets
         self.markets = markets
+
+    def bookmakerToDB(self):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("INSERT INTO bookmakers VALUES (?, ?, ?)",
+                  (self.key, self.lastUpdate, self.markets))
+        conn.commit()
+        conn.close()
 
     def __eq__(self, other):  # Compare two bookmakers
         return self.key == other.key and self.lastUpdate == other.lastUpdate and self.markets == other.markets

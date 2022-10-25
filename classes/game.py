@@ -1,3 +1,5 @@
+import sqlite3
+
 
 class Game:  # Class for the game itself
 
@@ -51,6 +53,14 @@ class Game:  # Class for the game itself
 
     def setScores(self, scores):  # Set game scores
         self.scores = scores
+
+    def gameToDB(self):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("INSERT INTO games VALUES (?, ?, ?, ?, ?, ?, ?)",
+                  (self.id, self.homeTeam, self.awayTeam, self.commenceTime, self.bookmakers, self.completed, self.scores))
+        conn.commit()
+        conn.close()
 
     def __str__(self):  # String representation of game
         return self.id + " " + self.homeTeam + " " + self.awayTeam + " " + str(self.commenceTime) + " " + str(self.bookmakers) + " " + str(self.completed) + " " + str(self.scores)

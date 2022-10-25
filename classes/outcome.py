@@ -1,3 +1,6 @@
+import sqlite3
+
+
 class Outcome:  # Outcome of a bet
 
     def __init__(self, name, price):  # Constructor
@@ -15,6 +18,14 @@ class Outcome:  # Outcome of a bet
 
     def setPrice(self, price):  # Set price of the outcome
         self.price = price
+
+    def outcomeToDB(self):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("INSERT INTO outcomes VALUES (?, ?)",
+                  (self.name, self.price))
+        conn.commit()
+        conn.close()
 
     def __eq__(self, other):  # Compare two outcomes
         return self.name == other.name and self.price == other.price

@@ -1,5 +1,6 @@
 from ast import Delete
 import data
+import sqlite3
 
 
 class User:  # Class for user
@@ -75,6 +76,14 @@ class User:  # Class for user
 
     def deleteAccount(self):
         del self
+
+    def userToDB(self):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)", (self.name,
+                  self.email, self.password, self.bets, self.wallet, self.type))
+        conn.commit()
+        conn.close()
 
     def __eq__(self, other):  # Compare two users
         return self.name == other.name and self.email == other.email and self.logged == other.logged and self.bets == other.bets and self.type == other.type and self.wallet == other.wallet

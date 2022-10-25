@@ -12,6 +12,8 @@ user = User.User('test', 'test', 'test', [], 0, 2)
 
 
 def loginMenu():
+    """Login menu"""
+    print('\nLogin Menu')
     print('1 - Login')
     print('2 - Register')
     print('3 - Exit')
@@ -27,23 +29,8 @@ def loginMenu():
         loginMenu()
 
 
-def login():
-    username = input('Username: ')
-    password = input('Password: ')
-    userMenu()
-
-
-def register():
-    username = input('Username: ')
-    password = input('Password: ')
-    email = input('Email: ')
-    print('Registering...')
-    user = User.User(username, email, password, [], 0, 2)
-    print('Registered successfully')
-    userMenu()
-
-
 def userMenu():
+    """User menu"""
     print('0 - Play')
     print('1 - View games')
     print('2 - View bets')
@@ -86,6 +73,7 @@ def userMenu():
         userMenu()
 
     def play():
+        """Play"""
         exit = 0
         while(exit == 0):
             print("\nChoose a team:")
@@ -122,59 +110,100 @@ def userMenu():
 
 
 def viewGames():
+    """View games"""
     for game in games:
         print(game['homeTeam'], game['awayTeam'], game['commenceTime'])
     userMenu()
 
 
 def viewBets(user):
+    """View bets"""
     print(user.getBets())
     userMenu()
 
 
 def viewBalance(user):
-    print(user.getBalance())
+    """View balance"""
+    print(user.getWallet())
     userMenu()
 
 
 def deposit(user):
-    amount = input('Amount: ')
+    """Deposit"""
+    amount = float(input('Amount: '))
     user.deposit(amount)
     userMenu()
 
 
 def withdraw(user):
-    amount = input('Amount: ')
+    """Withdraw"""
+    amount = float(input('Amount: '))
     user.withdraw(amount)
     userMenu()
 
 
 def deleteAccount():
+    """Delete account"""
     user.deleteAccount()
     loginMenu()
 
 
 def changePassword(user):
+    """Change password"""
     password = input('Password: ')
     user.setPassword(password)
     userMenu()
 
 
 def changeEmail(user):
+    """Change email"""
     email = input('Email: ')
     user.setEmail(email)
     userMenu()
 
 
 def changeUsername(user):
+    """Change username"""
     username = input('Username: ')
     user.setUsername(username)
     userMenu()
 
 
+def checkLogin(email, password):
+    """Check login"""
+    if User.DBtoUser(email, password) == None:
+        print('Invalid credentials')
+        loginMenu()
+    else:
+        user = User.DBtoUser(email, password)
+        print('Logged in successfully')
+        userMenu()
+
+
+def login():
+    """Login"""
+    email = input('Email: ')
+    password = input('Password: ')
+    checkLogin(email, password)
+
+
+def register():
+    """Register"""
+    username = input('Username: ')
+    password = input('Password: ')
+    email = input('Email: ')
+    print('Registering...')
+    user = User.User(username, email, password, [], 0, 2)
+    user.userToDB()
+    print('Registered successfully')
+    userMenu()
+
+
 def main():
+    """Main"""
     loginMenu()
 
 
 if __name__ == "__main__":
+    """Main"""
     main()

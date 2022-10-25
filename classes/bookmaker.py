@@ -29,7 +29,7 @@ class Bookmaker:  # Class for bookmaker
     def bookmakerToDB(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("INSERT INTO bookmakers VALUES (?, ?, ?)",
+        c.execute("INSERT INTO Bookmaker VALUES (?, ?, ?)",
                   (self.key, self.lastUpdate, self.markets))
         conn.commit()
         conn.close()

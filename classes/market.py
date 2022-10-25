@@ -23,7 +23,7 @@ class Market:  # Class for the market
     def marketToDB(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("INSERT INTO markets VALUES (?, ?)",
+        c.execute("INSERT INTO Market VALUES (?, ?)",
                   (self.key, self.outcomes))
         conn.commit()
         conn.close()

@@ -22,7 +22,7 @@ class Outcome:  # Outcome of a bet
     def outcomeToDB(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("INSERT INTO outcomes VALUES (?, ?)",
+        c.execute("INSERT INTO Outcome VALUES (?, ?)",
                   (self.name, self.price))
         conn.commit()
         conn.close()

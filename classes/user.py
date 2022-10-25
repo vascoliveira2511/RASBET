@@ -39,6 +39,7 @@ class User:  # Class for user
         self.name = name
 
     def setEmail(self, email):  # Set email of the user
+
         self.email = email
 
     def setLogged(self, logged):  # Set logged status
@@ -80,8 +81,21 @@ class User:  # Class for user
     def userToDB(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)", (self.name,
-                  self.email, self.password, self.bets, self.wallet, self.type))
+        c.execute("INSERT INTO User(name, email, password, logged, wallet, type) VALUES (?, ?, ?, ?, ?, ?)", (self.name,
+                  self.email, self.password, self.logged, self.wallet, self.type))
+        conn.commit()
+        conn.close()
+
+    def DBtoUser(email, password):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM User WHERE email = ?", (email))
+        data = c.fetchone()
+        if data is None:
+            return None
+        elif data[2] == password:
+            # TODO: Still need to add bets
+            return User(data[1], data[2], data[3], data[4], [], data[5], data[6])
         conn.commit()
         conn.close()
 

@@ -22,11 +22,12 @@ c = db.cursor()
 
 def createTables():
     c.execute('CREATE TABLE IF NOT EXISTS Game (id INTEGER PRIMARY KEY, name TEXT, homeTeam TEXT, awayTeam TEXT, commenceTime TEXT, completed boolean, scores TEXT)')
-    c.execute('CREATE TABLE IF NOT EXISTS Bookmark (id INTEGER PRIMARY KEY, key TEXT, lastUpdate TEXT, game TEXT, FOREIGN KEY(game) REFERENCES Game(id))')
-    c.execute('CREATE TABLE IF NOT EXISTS Market (id INTEGER PRIMARY KEY, key TEXT, bookmark TEXT, FOREIGN KEY(bookmark) REFERENCES Bookmark(id))')
-    c.execute('CREATE TABLE IF NOT EXISTS Outcome (id INTEGER PRIMARY KEY, name TEXT, price FLOAT, market TEXT, FOREIGN KEY(market) REFERENCES Market(id))')
+    c.execute('CREATE TABLE IF NOT EXISTS Bookmark (id INTEGER PRIMARY KEY, key TEXT, lastUpdate TEXT, game INTEGER, FOREIGN KEY(game) REFERENCES Game(id))')
+    c.execute('CREATE TABLE IF NOT EXISTS Market (id INTEGER PRIMARY KEY, key TEXT, bookmark INTEGER, FOREIGN KEY(bookmark) REFERENCES Bookmark(id))')
+    c.execute('CREATE TABLE IF NOT EXISTS Outcome (id INTEGER PRIMARY KEY, name TEXT, price FLOAT, market INTEGER, FOREIGN KEY(market) REFERENCES Market(id))')
     c.execute(
-        'CREATE TABLE IF NOT EXISTS User (id INTEGER PRIMARY KEY, email TEXT, password TEXT, balance FLOAT)')
+        'CREATE TABLE IF NOT EXISTS User (id INTEGER PRIMARY KEY, name TEXT, email TEXT, password TEXT, logged boolean, type INTEGER, wallet FLOAT)')
+    c.execute('CREATE TABLE IF NOT EXISTS Bet (id INTEGER PRIMARY KEY,outcome INTEGER, user INTEGER, FOREIGN KEY(user) REFERENCES User(id), FOREIGN KEY(outcome) REFERENCES Outcome(id))')
 
 
 def populateTables(games):

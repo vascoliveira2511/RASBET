@@ -3,8 +3,9 @@ import sqlite3
 
 class Game:  # Class for the game itself
 
-    def __init__(self, id, homeTeam, awayTeam, commenceTime, completed, bookmakers, scores):  # Constructor
-        self.id = id  # Game id
+    def __init__(self, id, name, homeTeam, awayTeam, commenceTime, completed, bookmakers, scores):  # Constructor
+        self.id = id
+        self.name = name  # Game name
         self.homeTeam = homeTeam  # Home team
         self.awayTeam = awayTeam  # Away team
         self.commenceTime = commenceTime  # Game commence time
@@ -14,6 +15,9 @@ class Game:  # Class for the game itself
 
     def getId(self):  # Get game id
         return self.id
+
+    def getName(self):  # Get game name
+        return self.name
 
     def getHomeTeam(self):  # Get home team
         return self.homeTeam
@@ -62,8 +66,17 @@ class Game:  # Class for the game itself
         conn.commit()
         conn.close()
 
+    def DBtoGame(self, id):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM Game WHERE id = ?", (id,))
+        game = c.fetchone()
+        conn.commit()
+        conn.close()
+        return Game(game[0], game[1], game[2], game[3], game[4], game[5], game[6], game[7])
+
     def __str__(self):  # String representation of game
-        return self.id + " " + self.homeTeam + " " + self.awayTeam + " " + str(self.commenceTime) + " " + str(self.bookmakers) + " " + str(self.completed) + " " + str(self.scores)
+        return self.name + " " + self.homeTeam + " " + self.awayTeam + " " + str(self.commenceTime) + " " + str(self.bookmakers) + " " + str(self.completed) + " " + str(self.scores)
 
     def __eq__(self, other):  # Compare two games
-        return self.id == other.id and self.homeTeam == other.homeTeam and self.awayTeam == other.awayTeam and self.commenceTime == other.commenceTime and self.bookmakers == other.bookmakers and self.completed == other.completed and self.scores == other.scores
+        return self.name == other.name and self.homeTeam == other.homeTeam and self.awayTeam == other.awayTeam and self.commenceTime == other.commenceTime and self.bookmakers == other.bookmakers and self.completed == other.completed and self.scores == other.scores

@@ -3,7 +3,8 @@ import sqlite3
 
 class Bookmaker:  # Class for bookmaker
 
-    def __init__(self, key, lastUpdate, markets):  # Constructor
+    def __init__(self, id, key, lastUpdate, markets):  # Constructor
+        self.id = id  # Bookmaker id
         self.key = key  # Bookmaker key
         self.lastUpdate = lastUpdate  # Last update time
         self.markets = markets  # List of markets
@@ -32,6 +33,17 @@ class Bookmaker:  # Class for bookmaker
         c.execute("INSERT INTO Bookmaker VALUES (?, ?, ?)",
                   (self.key, self.lastUpdate, self.markets))
         conn.commit()
+        conn.close()
+
+    def DBtoBookmaker(self, id):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM Bookmaker WHERE id=?", (id,))
+        row = c.fetchone()
+        self.id = row[0]
+        self.key = row[1]
+        self.lastUpdate = row[2]
+        self.markets = row[3]
         conn.close()
 
     def __eq__(self, other):  # Compare two bookmakers

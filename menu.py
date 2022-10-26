@@ -1,6 +1,9 @@
 import email
 from secrets import choice
+import sqlite3
 from turtle import pen
+from classes.Bookmaker import Bookmaker
+from classes.Game import Game
 import classes.User as User
 import data
 import sys
@@ -8,17 +11,20 @@ from classes import *
 
 
 games = data.getData()
-user = User.User('test', 'test', 'test', True, [], 0, 2)
+
+user = User.User(0, 'test', 'test', 'test', False, [], 0, 2)
 
 
 def checkLogin(email, password):
     """Check login"""
     if User.User.DBtoUser(email, password) == None:
-        print('Invalid credentials')
+        print('\nInvalid credentials')
         loginMenu()
     else:
         user = User.User.DBtoUser(email, password)
-        print('Logged in successfully')
+        print('\nLogged in successfully\n')
+        user.login()
+        user.updateDB()
         userMenu()
 
 
@@ -34,20 +40,173 @@ def register():
     username = input('Username: ')
     password = input('Password: ')
     email = input('Email: ')
-    print('Registering...')
-    user = User.User(username, email, password, True, [], 0, 2)
+    type = input('Type: ')
+    print('\nRegistering...')
+    user = User.User(0, username, email, password, False, [], 0, type)
     user.userToDB()
-    print('Registered successfully')
+    print('\nRegistered successfully')
+    loginMenu()
+
+
+def viewGamesDB():
+    """View games"""
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM Game")
+    data = c.fetchall()
+    for row in data:
+        print("\n id = ", row[0], " -> ", row[2], " vs ", row[3])
+    c.close()
     userMenu()
+
+
+def viewGameDB(id):
+    """View game"""
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM Game WHERE id = " + id)
+    data = c.fetchall()
+    for row in data:
+        print("\n id = ", row[0], " -> ", row[2], " vs ", row[3])
+    c.close()
+    bet()
+
+
+def viewBookmakerBD(id):
+    """View bookmaker"""
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM Bookmark WHERE game = " + id)
+    data = c.fetchall()
+    for row in data:
+        print("\n id = ", row[0], " -> ", row[1])
+    c.close()
+    bet()
+
+
+def viewMarketDB(id):
+    """View market"""
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM Market WHERE bookmark = " + id)
+    data = c.fetchall()
+    for row in data:
+        print("\n id = ", row[0], " -> ", row[1])
+    c.close()
+    bet()
+
+
+def viewOutcomeDB(id):
+    """View outcome"""
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM Outcome WHERE market = " + id)
+    data = c.fetchall()
+    for row in data:
+        print("\n id = ", row[0], " -> ", row[1], " -> ", row[2])
+    c.close()
+    bet()
+
+
+def viewBets(user):
+    """View bets"""
+    print(user.getBets())
+    userMenu()
+
+
+def viewBalance(user):
+    """View balance"""
+    print(user.getWallet())
+    userMenu()
+
+
+def deposit(user):
+    """Deposit"""
+    amount = float(input('Amount: '))
+    user.deposit(amount)
+    user.updateDB()
+    userMenu()
+
+
+def withdraw(user):
+    """Withdraw"""
+    amount = float(input('Amount: '))
+    user.withdraw(amount)
+    user.updateDB()
+    userMenu()
+
+
+def deleteAccount():
+    """Delete account"""
+    user.deleteDB()
+    loginMenu()
+
+
+def changePassword(user):
+    """Change password"""
+    password = input('Password: ')
+    user.setPassword(password)
+    user.updateDB()
+    userMenu()
+
+
+def changeEmail(user):
+    """Change email"""
+    email = input('Email: ')
+    user.setEmail(email)
+    user.updateDB()
+    userMenu()
+
+
+def changeUsername(user):
+    """Change username"""
+    username = input('Username: ')
+    user.setUsername(username)
+    userMenu()
+
+
+def placeBet(id):
+    """Place bet"""
+    user.addBet(id)
+    user.updateDB()
+    print('\nBet placed successfully')
+    bet()
+
+
+def bet():
+    """Bet"""
+    print('\nBetting Menu\n')
+    print('1 - View Games')
+    print('2 - View Bookmakers for a Game')
+    print('3 - View Markets for a Bookmaker')
+    print('4 - View Outcomes for a Market')
+    print('5 - Place a Bet')
+    print('6 - Back')
+    choice = input('\nChoice: ')
+    if choice == '1':
+        viewGamesDB()
+    elif choice == '2':
+        viewBookmakerBD(input('Game ID: '))
+    elif choice == '3':
+        viewMarketDB(input('Bookamer ID: '))
+    elif choice == '4':
+        viewOutcomeDB(input('Market ID: '))
+    elif choice == '5':
+        placeBet(input('Outcome ID: '))
+    elif choice == '6':
+        userMenu()
+    else:
+        print('Invalid choice')
+        bet()
 
 
 def loginMenu():
     """Login menu"""
-    print('\nLogin Menu')
+    print('\nLogin Menu\n')
     print('1 - Login')
     print('2 - Register')
     print('3 - Exit')
-    choice = input('Choice: ')
+    choice = input('\nChoice: ')
     if choice == '1':
         login()
     elif choice == '2':
@@ -61,7 +220,8 @@ def loginMenu():
 
 def userMenu():
     """User menu"""
-    print('0 - Play')
+    print('\nUser Menu\n')
+    print('0 - Bet')
     print('1 - View games')
     print('2 - View bets')
     print('3 - View balance')
@@ -69,15 +229,16 @@ def userMenu():
     print('5 - Withdraw')
     print('6 - Logout')
     print('7 - Exit')
+    print('\nOPTIONS\n')
     print('8 - Delete account')
     print('9 - Change password')
     print('10 - Change email')
     print('11 - Change username')
-    choice = input('Choice: ')
+    choice = input('\nChoice: ')
     if choice == '0':
-        play()
+        bet()
     elif choice == '1':
-        viewGames()
+        viewGamesDB()
     elif choice == '2':
         viewBets(user)
     elif choice == '3':
@@ -101,102 +262,6 @@ def userMenu():
     else:
         print('Invalid choice')
         userMenu()
-
-    def play():
-        """Play"""
-        exit = 0
-        while(exit == 0):
-            print("\nChoose a team:")
-            for i, game in enumerate(games):
-                print(f"{i} - {game['homeTeam']}")
-            choice = int(input("Choice: "))
-            print(f"\You chose {games[choice]['homeTeam']}\n")
-            print(
-                f"The game is {games[choice]['homeTeam']} vs {games[choice]['awayTeam']}\n")
-            print(f"The game begins at {games[choice]['commenceTime']}\n")
-            print("Choose a key:")
-            for i in range(0, len(games[choice]['bookmakers'])):
-                print(f"{i} - {games[choice]['bookmakers'][i]['key']}")
-            key = int(input("key: "))
-            print(f"\nYou chose {games[choice]['bookmakers'][key]['key']}\n")
-            print("Choose a market:")
-            for i in range(0, len(games[choice]['bookmakers'][key]['markets'])):
-                print(
-                    f"{i} - {games[choice]['bookmakers'][key]['markets'][i]['key']}")
-            market = int(input("market: "))
-            print(
-                f"\nYou chose {games[choice]['bookmakers'][key]['markets'][market]['key']}\n")
-            print("Choose a bet:")
-            for i in range(0, len(games[choice]['bookmakers'][key]['markets'][market]['outcomes'])):
-                print(
-                    f"{i} - {games[choice]['bookmakers'][key]['markets'][market]['outcomes'][i]['name']} com preço de {games[choice]['bookmakers'][key]['markets'][market]['outcomes'][i]['price']}")
-            bet = int(input("bet: "))
-            print("\nBet registred!\n")
-            User.addBet(user, games[choice]['bookmakers'][key]
-                        ['markets'][market]['outcomes'][bet])
-            print("Keep playing?")
-            exit = int(input("0 - Yes\n1 - No\nChoose: "))
-        userMenu()
-
-
-def viewGames():
-    """View games"""
-    for game in games:
-        print(game['homeTeam'], game['awayTeam'], game['commenceTime'])
-    userMenu()
-
-
-def viewBets(user):
-    """View bets"""
-    print(user.getBets())
-    userMenu()
-
-
-def viewBalance(user):
-    """View balance"""
-    print(user.getWallet())
-    userMenu()
-
-
-def deposit(user):
-    """Deposit"""
-    amount = float(input('Amount: '))
-    user.deposit(amount)
-    userMenu()
-
-
-def withdraw(user):
-    """Withdraw"""
-    amount = float(input('Amount: '))
-    user.withdraw(amount)
-    userMenu()
-
-
-def deleteAccount():
-    """Delete account"""
-    user.deleteAccount()
-    loginMenu()
-
-
-def changePassword(user):
-    """Change password"""
-    password = input('Password: ')
-    user.setPassword(password)
-    userMenu()
-
-
-def changeEmail(user):
-    """Change email"""
-    email = input('Email: ')
-    user.setEmail(email)
-    userMenu()
-
-
-def changeUsername(user):
-    """Change username"""
-    username = input('Username: ')
-    user.setUsername(username)
-    userMenu()
 
 
 def main():

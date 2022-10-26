@@ -5,7 +5,8 @@ import sqlite3
 
 class User:  # Class for user
 
-    def __init__(self, name, email, password, logged, bets, wallet, type):  # Constructor
+    def __init__(self, id, name, email, password, logged, bets, wallet, type):  # Constructor
+        self.id = id  # ID of the user
         self.name = name  # Name of the user
         self.email = email  # Email of the user
         self.password = password  # Password of the user
@@ -13,6 +14,9 @@ class User:  # Class for user
         self.bets = bets  # List of bets
         self.type = type  # 0 - admin, 1 - special, 2 - normal user
         self.wallet = wallet  # Wallet of the user
+
+    def getId(self):
+        return self.id
 
     def getName(self):  # Get name of the user
         return self.name
@@ -75,9 +79,6 @@ class User:  # Class for user
     def removeBet(self, bet):  # Remove bet from the list of bets
         self.bets.remove(bet)
 
-    def deleteAccount(self):
-        del self
-
     def userToDB(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
@@ -89,18 +90,65 @@ class User:  # Class for user
     def DBtoUser(email, password):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("SELECT * FROM User WHERE email = ?", (email))
+        c.execute("SELECT * FROM User WHERE email = ?", (email,))
         data = c.fetchone()
+        print(data)
         if data is None:
+            print("No user found")
             return None
-        elif data[2] == password:
+        elif data[3] == password:
             # TODO: Still need to add bets
-            return User(data[1], data[2], data[3], data[4], [], data[5], data[6])
+            user = User(data[0], data[1], data[2], data[3],
+                        data[4], [], data[5], data[6])
+            user.betsFromDB()
+            return user
+        elif data[3] != password:
+            print("Wrong password")
+            return None
         conn.commit()
         conn.close()
 
-    def __eq__(self, other):  # Compare two users
-        return self.name == other.name and self.email == other.email and self.logged == other.logged and self.bets == other.bets and self.type == other.type and self.wallet == other.wallet
+    def updateIDfromDB(self):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("SELECT id FROM User WHERE email = ?", (self.email,))
+        data = c.fetchone()
+        self.id = data[0]
+        conn.commit()
+        conn.close()
+
+    def betsFromDB(self):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM Bet WHERE user = ?", (self.id,))
+        data = c.fetchall()
+        for bet in data:
+            self.bets.append(bet[1])
+        conn.commit()
+        conn.close()
+
+    def insertBetDB(self, Outcomeid):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("INSERT INTO Bet(user, outcome) VALUES (?, ?)",
+                  (self.id, Outcomeid))
+        conn.commit()
+        conn.close()
+
+    def updateDB(self):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("UPDATE User SET name = ?, email = ?, password = ?, logged = ?, wallet = ?, type = ? WHERE id = ?",
+                  (self.name, self.email, self.password, self.logged, self.wallet, self.type, self.id))
+        conn.commit()
+        conn.close()
+
+    def deleteDB(self):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("DELETE FROM User WHERE email = ?", (self.email))
+        conn.commit()
+        conn.close()
 
     def __str__(self):  # String representation of user
         return "Name: " + self.name + " Email: " + self.email + " Logged: " + str(self.logged) + " Bets: " + str(self.bets) + " Type: " + str(self.type) + " Wallet: " + str(self.wallet) + "\n"

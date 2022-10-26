@@ -3,9 +3,13 @@ import sqlite3
 
 class Outcome:  # Outcome of a bet
 
-    def __init__(self, name, price):  # Constructor
+    def __init__(self, id, name, price):  # Constructor
+        self.id = id  # Outcome id
         self.name = ""  # Name of the outcome
         self.price = 0  # Price of the outcome
+
+    def getId(self):  # Get id of the outcome
+        return self.id
 
     def getName(self):  # Get name of the outcome
         return self.name
@@ -25,6 +29,16 @@ class Outcome:  # Outcome of a bet
         c.execute("INSERT INTO Outcome VALUES (?, ?)",
                   (self.name, self.price))
         conn.commit()
+        conn.close()
+
+    def DBtoOutcome(self, id):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM Outcome WHERE id=?", (id,))
+        row = c.fetchone()
+        self.id = row[0]
+        self.name = row[1]
+        self.price = row[2]
         conn.close()
 
     def __eq__(self, other):  # Compare two outcomes

@@ -8,7 +8,37 @@ from classes import *
 
 
 games = data.getData()
-user = User.User('test', 'test', 'test', [], 0, 2)
+user = User.User('test', 'test', 'test', True, [], 0, 2)
+
+
+def checkLogin(email, password):
+    """Check login"""
+    if User.User.DBtoUser(email, password) == None:
+        print('Invalid credentials')
+        loginMenu()
+    else:
+        user = User.User.DBtoUser(email, password)
+        print('Logged in successfully')
+        userMenu()
+
+
+def login():
+    """Login"""
+    email = input('Email: ')
+    password = input('Password: ')
+    checkLogin(email, password)
+
+
+def register():
+    """Register"""
+    username = input('Username: ')
+    password = input('Password: ')
+    email = input('Email: ')
+    print('Registering...')
+    user = User.User(username, email, password, True, [], 0, 2)
+    user.userToDB()
+    print('Registered successfully')
+    userMenu()
 
 
 def loginMenu():
@@ -166,36 +196,6 @@ def changeUsername(user):
     """Change username"""
     username = input('Username: ')
     user.setUsername(username)
-    userMenu()
-
-
-def checkLogin(email, password):
-    """Check login"""
-    if User.DBtoUser(email, password) == None:
-        print('Invalid credentials')
-        loginMenu()
-    else:
-        user = User.DBtoUser(email, password)
-        print('Logged in successfully')
-        userMenu()
-
-
-def login():
-    """Login"""
-    email = input('Email: ')
-    password = input('Password: ')
-    checkLogin(email, password)
-
-
-def register():
-    """Register"""
-    username = input('Username: ')
-    password = input('Password: ')
-    email = input('Email: ')
-    print('Registering...')
-    user = User.User(username, email, password, [], 0, 2)
-    user.userToDB()
-    print('Registered successfully')
     userMenu()
 
 

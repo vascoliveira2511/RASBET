@@ -5,11 +5,11 @@ import sqlite3
 
 class User:  # Class for user
 
-    def __init__(self, name, email, password, bets, wallet, type):  # Constructor
+    def __init__(self, name, email, password, logged, bets, wallet, type):  # Constructor
         self.name = name  # Name of the user
         self.email = email  # Email of the user
         self.password = password  # Password of the user
-        self.logged = True  # Is the user logged in?
+        self.logged = logged  # Is the user logged in?
         self.bets = bets  # List of bets
         self.type = type  # 0 - admin, 1 - special, 2 - normal user
         self.wallet = wallet  # Wallet of the user

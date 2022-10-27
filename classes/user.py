@@ -82,8 +82,8 @@ class User:  # Class for user
     def userToDB(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("INSERT INTO User(name, email, password, logged, wallet, type) VALUES (?, ?, ?, ?, ?, ?)", (self.name,
-                  self.email, self.password, self.logged, self.wallet, self.type))
+        c.execute("INSERT INTO User(name, email, password, logged, type, wallet,) VALUES (?, ?, ?, ?, ?, ?)", (self.name,
+                  self.email, self.password, self.logged, self.type, self.wallet,))
         conn.commit()
         conn.close()
 
@@ -146,7 +146,15 @@ class User:  # Class for user
     def deleteDB(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("DELETE FROM User WHERE email = ?", (self.email))
+        c.execute("DELETE FROM User WHERE id = ?", (self.id,))
+        conn.commit()
+        conn.close()
+
+    def addBetDB(self, outcomeId):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("INSERT INTO Bet(user, outcome) VALUES (?, ?)",
+                  (self.id, outcomeId))
         conn.commit()
         conn.close()
 

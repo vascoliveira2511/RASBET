@@ -1,9 +1,9 @@
-import email
 from secrets import choice
 import sqlite3
 from turtle import pen
 from classes.Bookmaker import Bookmaker
 from classes.Game import Game
+from classes.Outcome import Outcome
 from classes.User import User
 import data
 import sys
@@ -110,13 +110,13 @@ def viewOutcomeDB(id):
 
 def viewBets(user):
     """View bets"""
-    print(user.getBets())
+    print("\n", user.getBets())
     userMenu()
 
 
 def viewBalance(user):
     """View balance"""
-    print(user.getWallet())
+    print("\n", user.getWallet())
     userMenu()
 
 
@@ -124,7 +124,6 @@ def deposit(user):
     """Deposit"""
     amount = float(input('Amount: '))
     user.deposit(amount)
-    user.updateDB()
     userMenu()
 
 
@@ -132,7 +131,6 @@ def withdraw(user):
     """Withdraw"""
     amount = float(input('Amount: '))
     user.withdraw(amount)
-    user.updateDB()
     userMenu()
 
 
@@ -146,7 +144,6 @@ def changePassword(user):
     """Change password"""
     password = input('Password: ')
     user.setPassword(password)
-    user.updateDB()
     userMenu()
 
 
@@ -154,7 +151,6 @@ def changeEmail(user):
     """Change email"""
     email = input('Email: ')
     user.setEmail(email)
-    user.updateDB()
     userMenu()
 
 
@@ -167,9 +163,16 @@ def changeUsername(user):
 
 def placeBet(id):
     """Place bet"""
-    user.addBet(id)
-    user.updateDB()
-    print('\nBet placed successfully')
+    outcome = Outcome.Outcome.DBtoOutcome(id)
+    price = outcome.getPrice()
+    if user.getWallet() < price:
+        print('\nNot enough money')
+    else:
+        user.withdraw(price)
+        user.placeBet(outcome)
+        user.addBet(id)
+        user.addBetDB(id)
+        print('\nBet placed successfully')
     bet()
 
 
@@ -248,8 +251,12 @@ def userMenu():
     elif choice == '5':
         withdraw(user)
     elif choice == '6':
+        user.logout()
+        user.updateDB()
         loginMenu()
     elif choice == '7':
+        user.logout()
+        user.updateDB()
         sys.exit()
     elif choice == '8':
         deleteAccount(user)

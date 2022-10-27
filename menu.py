@@ -4,7 +4,7 @@ import sqlite3
 from turtle import pen
 from classes.Bookmaker import Bookmaker
 from classes.Game import Game
-import classes.User as User
+from classes.User import User
 import data
 import sys
 from classes import *

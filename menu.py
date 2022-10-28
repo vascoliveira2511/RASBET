@@ -1,8 +1,15 @@
+from datetime import datetime
+from random import random
 from secrets import choice
 import sqlite3
+import string
+from telnetlib import GA
+from tkinter import E
 from turtle import pen
+from unicodedata import name
 from classes.Bookmaker import Bookmaker
 from classes.Game import Game
+from classes.Market import Market
 from classes.Outcome import Outcome
 from classes.User import User
 import data
@@ -13,6 +20,10 @@ from classes import *
 games = data.getData()
 
 user = User.User(0, 'test', 'test', 'test', False, [], 0, 2)
+game = Game.Game(0, 'test', 'test', 'test', 'test', False, '')
+bookmaker = Bookmaker.Bookmaker(0, 'test', 'test')
+market = Market.market = Market(0, 'test')
+outcome = Outcome.Outcome(0, 'test', 0)
 
 
 def checkLogin(email, password):
@@ -25,7 +36,15 @@ def checkLogin(email, password):
         print('\nLogged in successfully\n')
         user.login()
         user.updateDB()
-        userMenu()
+        if(user.getType() == 2):
+            userMenu()
+        elif(user.getType() == 1):
+            specialMenu()
+        elif(user.getType() == 0):
+            adminMenu()
+        else:
+            print('Error')
+            loginMenu()
 
 
 def login():
@@ -57,7 +76,6 @@ def viewGamesDB():
     for row in data:
         print("\n id = ", row[0], " -> ", row[2], " vs ", row[3])
     c.close()
-    userMenu()
 
 
 def viewGameDB(id):
@@ -69,7 +87,6 @@ def viewGameDB(id):
     for row in data:
         print("\n id = ", row[0], " -> ", row[2], " vs ", row[3])
     c.close()
-    bet()
 
 
 def viewBookmakerBD(id):
@@ -81,7 +98,6 @@ def viewBookmakerBD(id):
     for row in data:
         print("\n id = ", row[0], " -> ", row[1])
     c.close()
-    bet()
 
 
 def viewMarketDB(id):
@@ -93,7 +109,6 @@ def viewMarketDB(id):
     for row in data:
         print("\n id = ", row[0], " -> ", row[1])
     c.close()
-    bet()
 
 
 def viewOutcomeDB(id):
@@ -105,60 +120,51 @@ def viewOutcomeDB(id):
     for row in data:
         print("\n id = ", row[0], " -> ", row[1], " -> ", row[2])
     c.close()
-    bet()
 
 
 def viewBets(user):
     """View bets"""
     print("\n", user.getBets())
-    userMenu()
 
 
 def viewBalance(user):
     """View balance"""
     print("\n", user.getWallet())
-    userMenu()
 
 
 def deposit(user):
     """Deposit"""
     amount = float(input('Amount: '))
     user.deposit(amount)
-    userMenu()
 
 
 def withdraw(user):
     """Withdraw"""
     amount = float(input('Amount: '))
     user.withdraw(amount)
-    userMenu()
 
 
 def deleteAccount():
     """Delete account"""
     user.deleteDB()
-    loginMenu()
 
 
 def changePassword(user):
     """Change password"""
     password = input('Password: ')
     user.setPassword(password)
-    userMenu()
 
 
 def changeEmail(user):
     """Change email"""
     email = input('Email: ')
     user.setEmail(email)
-    userMenu()
 
 
 def changeUsername(user):
     """Change username"""
     username = input('Username: ')
     user.setUsername(username)
-    userMenu()
 
 
 def placeBet(id):
@@ -188,14 +194,19 @@ def bet():
     choice = input('\nChoice: ')
     if choice == '1':
         viewGamesDB()
+        bet()
     elif choice == '2':
         viewBookmakerBD(input('Game ID: '))
+        bet()
     elif choice == '3':
         viewMarketDB(input('Bookamer ID: '))
+        bet()
     elif choice == '4':
         viewOutcomeDB(input('Market ID: '))
+        bet()
     elif choice == '5':
         placeBet(input('Outcome ID: '))
+        bet()
     elif choice == '6':
         userMenu()
     else:
@@ -221,6 +232,154 @@ def loginMenu():
         loginMenu()
 
 
+def addGame():
+    """Add game"""
+    name = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                   for _ in range(32))
+    awayTeam = input('Away Team: ')
+    homeTeam = input('Home Team: ')
+    commenceTime = input('Commence Time: ')
+    completed = False
+    scores = ''
+    game = Game.Game(0, name, awayTeam, homeTeam,
+                     commenceTime, completed, scores)
+    game.gameToDB()
+    specialMenu()
+
+
+def addBookmaker(gameId):
+    """Add bookmaker"""
+    name = input('Name: ')
+    bookmaker = Bookmaker.Bookmaker(0, name)
+    bookmaker.bookmarkToDB(gameId)
+    specialMenu()
+
+
+def addMarket(bookmarkId):
+    """Add market"""
+    name = input('Name: ')
+    market = Market.Market(0, name)
+    market.marketToDB(bookmarkId)
+    specialMenu()
+
+
+def addOutcome(marketId):
+    """Add outcome"""
+    name = input('Name: ')
+    price = input('Price: ')
+    outcome = Outcome.Outcome(0, name, price)
+    outcome.outcomeToDB(marketId)
+    specialMenu()
+
+
+def alterGame():
+    """Alter game"""
+    viewGamesDB()
+    id = input('Game ID: ')
+    viewGameDB(id)
+    print('\n1 - Alter away team')
+    print('2 - Alter home team')
+    print('3 - Alter commence time')
+    print('4 - Alter completed')
+    print('5 - Alter scores')
+    print('6 - Back')
+    choice = input('\nChoice: ')
+    if choice == '1':
+        awayTeam = input('Away Team: ')
+        game.setAwayTeam(awayTeam)
+    elif choice == '2':
+        homeTeam = input('Home Team: ')
+        game.setHomeTeam(homeTeam)
+    elif choice == '3':
+        commenceTime = input('Commence Time: ')
+        game.setCommenceTime(commenceTime)
+    elif choice == '4':
+        completed = input('Completed: ')
+        game.setCompleted(completed)
+    elif choice == '5':
+        scores = input('Scores: ')
+        game.setScores(scores)
+    elif choice == '6':
+        game.gameToDB()
+        specialMenu()
+
+
+def alterBookmaker(bookmarkId):
+    """Alter bookmaker"""
+    bookmaker = Bookmaker.Bookmaker.DBtoBookmaker(bookmarkId)
+    print('\n1 - Alter name')
+    print('2 - Back')
+    choice = input('\nChoice: ')
+    if choice == '1':
+        name = input('Name: ')
+        bookmaker.setName(name)
+        bookmaker.setLastUpdate(datetime.datetime.now())
+    elif choice == '2':
+        bookmaker.updateDB()
+        specialMenu()
+
+
+def alterMarket(marketId):
+    """Alter market"""
+    market = Market.Market.DBtoMarket(marketId)
+    print('\n1 - Alter name')
+    print('2 - Back')
+    choice = input('\nChoice: ')
+    if choice == '1':
+        name = input('Name: ')
+        market.setName(name)
+    elif choice == '2':
+        market.updateDB()
+        specialMenu()
+
+
+def alterOutcome(outcomeId):
+    """Alter outcome"""
+    outcome = Outcome.Outcome.DBtoOutcome(outcomeId)
+    print('\n1 - Alter name')
+    print('2 - Alter price')
+    print('3 - Back')
+    choice = input('\nChoice: ')
+    if choice == '1':
+        name = input('Name: ')
+        outcome.setName(name)
+    elif choice == '2':
+        price = input('Price: ')
+        outcome.setPrice(price)
+    elif choice == '3':
+        outcome.updateDB()
+        specialMenu()
+
+
+def deleteGame(id):
+    """Delete game"""
+    viewGamesDB()
+    game = Game.Game.DBtoGame(id)
+    game.deleteDB()
+    specialMenu()
+
+
+def deleteBookmaker(id):
+    """Delete bookmaker"""
+    bookmaker = Bookmaker.Bookmaker.DBtoBookmaker(id)
+    bookmaker.deleteDB()
+    specialMenu()
+
+
+def deleteMarket(id):
+    """Delete market"""
+    market = Market.Market.DBtoMarket(id)
+    market.deleteDB()
+    specialMenu()
+
+
+def deleteOutcome(id):
+    """Delete outcome"""
+    outcome = Outcome.Outcome.DBtoOutcome(id)
+    outcome.deleteDB()
+    specialMenu()
+
+
 def userMenu():
     """User menu"""
     print('\nUser Menu\n')
@@ -242,14 +401,19 @@ def userMenu():
         bet()
     elif choice == '1':
         viewGamesDB()
+        userMenu()
     elif choice == '2':
         viewBets(user)
+        userMenu()
     elif choice == '3':
         viewBalance(user)
+        userMenu()
     elif choice == '4':
         deposit(user)
+        userMenu()
     elif choice == '5':
         withdraw(user)
+        userMenu()
     elif choice == '6':
         user.logout()
         user.updateDB()
@@ -260,15 +424,93 @@ def userMenu():
         sys.exit()
     elif choice == '8':
         deleteAccount(user)
+        loginMenu()
     elif choice == '9':
         changePassword(user)
+        userMenu()
     elif choice == '10':
         changeEmail(user)
+        userMenu()
     elif choice == '11':
         changeUsername(user)
+        userMenu()
     else:
         print('Invalid choice')
         userMenu()
+
+
+def specialMenu():
+    print('\nSpecial Menu\n')
+    print('1 - View Games')
+    print('2 - View Bookmakers for a Game')
+    print('3 - View Markets for a Bookmaker')
+    print('4 - View Outcomes for a Market')
+    print('5 - Add Game')
+    print('6 - Add Bookmaker to a Game')
+    print('7 - Add Market to a Bookmaker')
+    print('8 - Add Outcome to a Market')
+    print('9 - Alter Game')
+    print('10 - Alter Bookmaker for a Game')
+    print('11 - Alter Market for a Bookmaker')
+    print('12 - Alter Outcome for a Market')
+    print('13 - Delete Game')
+    print('14 - Delete Bookmaker for a Game')
+    print('15 - Delete Market for a Bookmaker')
+    print('16 - Delete Outcome for a Market')
+    print('17 - logout')
+    choice = input('\nChoice: ')
+    if choice == '1':
+        viewGamesDB()
+        specialMenu()
+    elif choice == '2':
+        viewBookmakerBD(input('Game ID: '))
+        specialMenu()
+    elif choice == '3':
+        viewMarketDB(input('Bookamer ID: '))
+        specialMenu()
+    elif choice == '4':
+        viewOutcomeDB(input('Market ID: '))
+        specialMenu()
+    elif choice == '5':
+        addGame()
+        specialMenu()
+    elif choice == '6':
+        addBookmaker(input('Game ID: '))
+        specialMenu()
+    elif choice == '7':
+        addMarket(input('Bookamer ID: '))
+        specialMenu()
+    elif choice == '8':
+        addOutcome(input('Market ID: '))
+        specialMenu()
+    elif choice == '9':
+        alterGame(input('Game ID: '))
+        specialMenu()
+    elif choice == '10':
+        alterBookmaker(input('Bookamer ID: '))
+        specialMenu()
+    elif choice == '11':
+        alterMarket(input('Market ID: '))
+        specialMenu()
+    elif choice == '12':
+        alterOutcome(input('Outcome ID: '))
+        specialMenu()
+    elif choice == '13':
+        deleteGame(input('Game ID: '))
+        specialMenu()
+    elif choice == '14':
+        deleteBookmaker(input('Bookamer ID: '))
+        specialMenu()
+    elif choice == '15':
+        deleteMarket(input('Market ID: '))
+        specialMenu()
+    elif choice == '16':
+        deleteOutcome(input('Outcome ID: '))
+        specialMenu()
+    elif choice == '17':
+        user.logout()
+        user.updateDB()
+        loginMenu()
 
 
 def main():

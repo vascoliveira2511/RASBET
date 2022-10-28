@@ -23,11 +23,11 @@ class Outcome:  # Outcome of a bet
     def setPrice(self, price):  # Set price of the outcome
         self.price = price
 
-    def outcomeToDB(self):
+    def outcomeToDB(self, marketId):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("INSERT INTO Outcome VALUES (?, ?)",
-                  (self.name, self.price))
+        c.execute("INSERT INTO Outcome VALUES (?, ?, ?)",
+                  (self.name, self.price, marketId))
         conn.commit()
         conn.close()
 
@@ -39,6 +39,14 @@ class Outcome:  # Outcome of a bet
         self.id = row[0]
         self.name = row[1]
         self.price = row[2]
+        conn.close()
+
+    def updateOutcomeDB(self, name, price):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("UPDATE Outcome SET name=?, price=? WHERE id=?",
+                  (name, price, self.id))
+        conn.commit()
         conn.close()
 
     def __eq__(self, other):  # Compare two outcomes

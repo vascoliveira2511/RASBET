@@ -3,13 +3,12 @@ import sqlite3
 
 class Game:  # Class for the game itself
 
-    def __init__(self, id, name, homeTeam, awayTeam, commenceTime, completed, bookmakers, scores):  # Constructor
+    def __init__(self, id, name, homeTeam, awayTeam, commenceTime, completed, scores):  # Constructor
         self.id = id
         self.name = name  # Game name
         self.homeTeam = homeTeam  # Home team
         self.awayTeam = awayTeam  # Away team
         self.commenceTime = commenceTime  # Game commence time
-        self.bookmakers = bookmakers  # List of bookmakers
         self.completed = completed  # Game completed
         self.scores = scores  # Game scores
 
@@ -27,9 +26,6 @@ class Game:  # Class for the game itself
 
     def getCommenceTime(self):  # Get game commence time
         return self.commenceTime
-
-    def getBookmakers(self):  # Get list of bookmakers
-        return self.bookmakers
 
     def getCompleted(self):  # Get game completed
         return self.completed
@@ -49,9 +45,6 @@ class Game:  # Class for the game itself
     def setCommenceTime(self, commenceTime):  # Set game commence time
         self.commenceTime = commenceTime
 
-    def setBookmakers(self, bookmakers):  # Set list of bookmakers
-        self.bookmakers = bookmakers
-
     def setCompleted(self, completed):  # Set game completed
         self.completed = completed
 
@@ -61,8 +54,8 @@ class Game:  # Class for the game itself
     def gameToDB(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("INSERT INTO Game VALUES (?, ?, ?, ?, ?, ?, ?)",
-                  (self.id, self.homeTeam, self.awayTeam, self.commenceTime, self.bookmakers, self.completed, self.scores))
+        c.execute("INSERT INTO Game VALUES (?, ?, ?, ?, ?, ?)",
+                  (self.id, self.homeTeam, self.awayTeam, self.commenceTime,  self.completed, self.scores))
         conn.commit()
         conn.close()
 
@@ -73,10 +66,12 @@ class Game:  # Class for the game itself
         game = c.fetchone()
         conn.commit()
         conn.close()
-        return Game(game[0], game[1], game[2], game[3], game[4], game[5], game[6], game[7])
+        return Game(game[0], game[1], game[2], game[3], game[4], game[5], game[6])
 
-    def __str__(self):  # String representation of game
-        return self.name + " " + self.homeTeam + " " + self.awayTeam + " " + str(self.commenceTime) + " " + str(self.bookmakers) + " " + str(self.completed) + " " + str(self.scores)
-
-    def __eq__(self, other):  # Compare two games
-        return self.name == other.name and self.homeTeam == other.homeTeam and self.awayTeam == other.awayTeam and self.commenceTime == other.commenceTime and self.bookmakers == other.bookmakers and self.completed == other.completed and self.scores == other.scores
+    def updateGameDB(self):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("UPDATE Game SET name=?, homeTeam=?, awayTeam=?, commenceTime=?, completed=?, scores=? WHERE id=?",
+                  (self.name, self.homeTeam, self.awayTeam, self.commenceTime, self.completed, self.scores, self.id))
+        conn.commit()
+        conn.close()

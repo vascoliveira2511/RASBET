@@ -82,8 +82,8 @@ class User:  # Class for user
     def userToDB(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("INSERT INTO User(name, email, password, logged, type, wallet,) VALUES (?, ?, ?, ?, ?, ?)", (self.name,
-                  self.email, self.password, self.logged, self.type, self.wallet,))
+        c.execute("INSERT INTO User(name, email, password, logged, type, wallet) VALUES (?, ?, ?, ?, ?, ?)", (self.name,
+                  self.email, self.password, self.logged, self.type, self.wallet))
         conn.commit()
         conn.close()
 
@@ -92,7 +92,6 @@ class User:  # Class for user
         c = conn.cursor()
         c.execute("SELECT * FROM User WHERE email = ?", (email,))
         data = c.fetchone()
-        print(data)
         if data is None:
             print("No user found")
             return None
@@ -100,7 +99,6 @@ class User:  # Class for user
             # TODO: Still need to add bets
             user = User(data[0], data[1], data[2], data[3],
                         data[4], [], data[5], data[6])
-            user.betsFromDB()
             return user
         elif data[3] != password:
             print("Wrong password")
@@ -138,8 +136,8 @@ class User:  # Class for user
     def updateDB(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("UPDATE User SET name = ?, email = ?, password = ?, logged = ?, wallet = ?, type = ? WHERE id = ?",
-                  (self.name, self.email, self.password, self.logged, self.wallet, self.type, self.id))
+        c.execute("UPDATE User SET name = ?, email = ?, password = ?, logged = ?, wallet = ? WHERE id = ?",
+                  (self.name, self.email, self.password, self.logged, self.wallet, self.id))
         conn.commit()
         conn.close()
 
@@ -157,6 +155,3 @@ class User:  # Class for user
                   (self.id, outcomeId))
         conn.commit()
         conn.close()
-
-    def __str__(self):  # String representation of user
-        return "Name: " + self.name + " Email: " + self.email + " Logged: " + str(self.logged) + " Bets: " + str(self.bets) + " Type: " + str(self.type) + " Wallet: " + str(self.wallet) + "\n"

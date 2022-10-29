@@ -22,17 +22,17 @@ games = data.getData()
 user = User.User(0, 'test', 'test', 'test', False, [], 0, 2)
 game = Game.Game(0, 'test', 'test', 'test', 'test', False, '')
 bookmaker = Bookmaker.Bookmaker(0, 'test', 'test')
-market = Market.market = Market(0, 'test')
+market = Market.Market(0, 'test')
 outcome = Outcome.Outcome(0, 'test', 0)
 
 
 def checkLogin(email, password):
     """Check login"""
-    if User.User.DBtoUser(email, password) == None:
+    user = User.User.DBtoUser(email, password)
+    if user == None:
         print('\nInvalid credentials')
         loginMenu()
     else:
-        user = User.User.DBtoUser(email, password)
         print('\nLogged in successfully\n')
         user.login()
         user.updateDB()
@@ -41,7 +41,8 @@ def checkLogin(email, password):
         elif(user.getType() == 1):
             specialMenu()
         elif(user.getType() == 0):
-            adminMenu()
+            # TODO: admin menu
+            specialMenu()
         else:
             print('Error')
             loginMenu()

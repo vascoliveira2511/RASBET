@@ -5,7 +5,7 @@ import sqlite3
 
 class User:  # Class for user
 
-    def __init__(self, id, name, email, password, logged, bets, wallet, type):  # Constructor
+    def __init__(self, id, name, email, password, logged, bets, type, wallet):  # Constructor
         self.id = id  # ID of the user
         self.name = name  # Name of the user
         self.email = email  # Email of the user
@@ -43,7 +43,6 @@ class User:  # Class for user
         self.name = name
 
     def setEmail(self, email):  # Set email of the user
-
         self.email = email
 
     def setLogged(self, logged):  # Set logged status
@@ -99,6 +98,7 @@ class User:  # Class for user
             # TODO: Still need to add bets
             user = User(data[0], data[1], data[2], data[3],
                         data[4], [], data[5], data[6])
+            user.betsFromDB()
             return user
         elif data[3] != password:
             print("Wrong password")
@@ -145,13 +145,5 @@ class User:  # Class for user
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
         c.execute("DELETE FROM User WHERE id = ?", (self.id,))
-        conn.commit()
-        conn.close()
-
-    def addBetDB(self, outcomeId):
-        conn = sqlite3.connect('database.db')
-        c = conn.cursor()
-        c.execute("INSERT INTO Bet(user, outcome) VALUES (?, ?)",
-                  (self.id, outcomeId))
         conn.commit()
         conn.close()

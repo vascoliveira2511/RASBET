@@ -13,13 +13,13 @@ from classes.Market import Market
 from classes.Outcome import Outcome
 from classes.User import User
 import data
-import sys
 from classes import *
+import sys
 
 
 games = data.getData()
 
-user = User.User(0, 'test', 'test', 'test', False, [], 0, 2)
+user = User.User(0, 'test', 'test', 'test', False, [], 2, 0)
 game = Game.Game(0, 'test', 'test', 'test', 'test', False, '')
 bookmaker = Bookmaker.Bookmaker(0, 'test', 'test')
 market = Market.Market(0, 'test')
@@ -62,7 +62,7 @@ def register():
     email = input('Email: ')
     type = input('Type: ')
     print('\nRegistering...')
-    user = User.User(0, username, email, password, False, [], 0, type)
+    user = User.User(0, username, email, password, False, [], type, 0)
     user.userToDB()
     print('\nRegistered successfully')
     loginMenu()
@@ -168,17 +168,17 @@ def changeUsername(user):
     user.setUsername(username)
 
 
-def placeBet(id):
+def placeBet():
     """Place bet"""
-    outcome = Outcome.Outcome.DBtoOutcome(id)
+    id = input('Outcome ID: ')
+    outcome.DBtoOutcome(id)
     price = outcome.getPrice()
     if user.getWallet() < price:
         print('\nNot enough money')
     else:
         user.withdraw(price)
-        user.placeBet(outcome)
+        user.insertBetDB(id)
         user.addBet(id)
-        user.addBetDB(id)
         print('\nBet placed successfully')
     bet()
 
@@ -206,7 +206,7 @@ def bet():
         viewOutcomeDB(input('Market ID: '))
         bet()
     elif choice == '5':
-        placeBet(input('Outcome ID: '))
+        placeBet()
         bet()
     elif choice == '6':
         userMenu()
@@ -417,10 +417,12 @@ def userMenu():
         userMenu()
     elif choice == '6':
         user.logout()
+        # TODO: Need to fix this
         user.updateDB()
         loginMenu()
     elif choice == '7':
         user.logout()
+        # TODO: Need to fix this
         user.updateDB()
         sys.exit()
     elif choice == '8':

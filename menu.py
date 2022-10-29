@@ -237,7 +237,7 @@ def loginMenu():
 
 def addGame():
     """Add game"""
-    name = ''.join(choice(string.ascii_uppercase + string.digits)
+    name = ''.join(choice(string.ascii_lowercase + string.digits)
                    for _ in range(32))
     homeTeam = input('Home Team: ')
     awayTeam = input('Away Team: ')
@@ -276,35 +276,41 @@ def addOutcome(marketId):
 
 
 def alterGame():
+    global game
     """Alter game"""
     viewGamesDB()
     id = input('Game ID: ')
-    viewGameDB(id)
-    print('\n1 - Alter away team')
-    print('2 - Alter home team')
-    print('3 - Alter commence time')
-    print('4 - Alter completed')
-    print('5 - Alter scores')
-    print('6 - Back')
-    choice = input('\nChoice: ')
-    if choice == '1':
-        awayTeam = input('Away Team: ')
-        game.setAwayTeam(awayTeam)
-    elif choice == '2':
-        homeTeam = input('Home Team: ')
-        game.setHomeTeam(homeTeam)
-    elif choice == '3':
-        commenceTime = input('Commence Time: ')
-        game.setCommenceTime(commenceTime)
-    elif choice == '4':
-        completed = input('Completed: ')
-        game.setCompleted(completed)
-    elif choice == '5':
-        scores = input('Scores: ')
-        game.setScores(scores)
-    elif choice == '6':
-        game.gameToDB()
-        specialMenu()
+    game = Game.DBtoGame(id)
+    choice = 0
+    
+    while 1:
+        print('\n1 - Alter home team')
+        print('2 - Alter away team')
+        print('3 - Alter commence time')
+        print('4 - Alter completed')
+        print('5 - Alter scores')
+        print('6 - Back')
+        choice = input('\nChoice: ')
+        if choice == '1':
+            homeTeam = input('Home Team: ')
+            game.setHomeTeam(homeTeam)
+        elif choice == '2':
+            awayTeam = input('Away Team: ')
+            game.setHomeTeam(awayTeam)
+        elif choice == '3':
+            commenceTime = input('Commence Time: ')
+            game.setCommenceTime(commenceTime)
+        elif choice == '4':
+            completed = input('Completed: ')
+            game.setCompleted(completed)
+        elif choice == '5':
+            scores = input('Scores: ')
+            game.setScores(scores)
+        elif choice == '6':
+            game.updateGameDB()
+            specialMenu()
+    
+
 
 
 def alterBookmaker(bookmarkId):
@@ -357,7 +363,7 @@ def alterOutcome(outcomeId):
 def deleteGame(id):
     """Delete game"""
     viewGamesDB()
-    game.DBtoGame(id)
+    game = Game.DBtoGame(id)
     game.deleteDB()
     specialMenu()
 
@@ -489,7 +495,7 @@ def specialMenu():
         addOutcome(input('Market ID: '))
         specialMenu()
     elif choice == '9':
-        alterGame(input('Game ID: '))
+        alterGame()
         specialMenu()
     elif choice == '10':
         alterBookmaker(input('Bookamer ID: '))

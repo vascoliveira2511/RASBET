@@ -55,11 +55,11 @@ class Game:  # Class for the game itself
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
         c.execute("INSERT INTO Game(name, homeTeam, awayTeam, commenceTime, completed, scores) VALUES (?, ?, ?, ?, ?, ?)",
-                  (self.id, self.homeTeam, self.awayTeam, self.commenceTime,  self.completed, self.scores))
+                  (self.name, self.homeTeam, self.awayTeam, self.commenceTime,  self.completed, self.scores))
         conn.commit()
         conn.close()
 
-    def DBtoGame(self, id):
+    def DBtoGame(id):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
         c.execute("SELECT * FROM Game WHERE id = ?", (id,))
@@ -73,5 +73,12 @@ class Game:  # Class for the game itself
         c = conn.cursor()
         c.execute("UPDATE Game SET name=?, homeTeam=?, awayTeam=?, commenceTime=?, completed=?, scores=? WHERE id=?",
                   (self.name, self.homeTeam, self.awayTeam, self.commenceTime, self.completed, self.scores, self.id))
+        conn.commit()
+        conn.close()
+    
+    def deleteDB(self):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("DELETE FROM Game WHERE id = ?", (self.id,))
         conn.commit()
         conn.close()

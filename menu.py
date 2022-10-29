@@ -307,14 +307,14 @@ def alterGame():
 
 def alterBookmaker(bookmarkId):
     """Alter bookmaker"""
-    bookmaker = Bookmaker.Bookmaker.DBtoBookmaker(bookmarkId)
+    bookmaker.DBtoBookmaker(bookmarkId)
     print('\n1 - Alter name')
     print('2 - Back')
     choice = input('\nChoice: ')
     if choice == '1':
         name = input('Name: ')
         bookmaker.setName(name)
-        bookmaker.setLastUpdate(datetime.datetime.now())
+        bookmaker.setLastUpdate(datetime.now())
     elif choice == '2':
         bookmaker.updateDB()
         specialMenu()
@@ -322,7 +322,7 @@ def alterBookmaker(bookmarkId):
 
 def alterMarket(marketId):
     """Alter market"""
-    market = Market.Market.DBtoMarket(marketId)
+    market.DBtoMarket(marketId)
     print('\n1 - Alter name')
     print('2 - Back')
     choice = input('\nChoice: ')
@@ -336,7 +336,7 @@ def alterMarket(marketId):
 
 def alterOutcome(outcomeId):
     """Alter outcome"""
-    outcome = Outcome.Outcome.DBtoOutcome(outcomeId)
+    outcome.DBtoOutcome(outcomeId)
     print('\n1 - Alter name')
     print('2 - Alter price')
     print('3 - Back')
@@ -355,28 +355,28 @@ def alterOutcome(outcomeId):
 def deleteGame(id):
     """Delete game"""
     viewGamesDB()
-    game = Game.Game.DBtoGame(id)
+    game.DBtoGame(id)
     game.deleteDB()
     specialMenu()
 
 
 def deleteBookmaker(id):
     """Delete bookmaker"""
-    bookmaker = Bookmaker.Bookmaker.DBtoBookmaker(id)
+    bookmaker.DBtoBookmaker(id)
     bookmaker.deleteDB()
     specialMenu()
 
 
 def deleteMarket(id):
     """Delete market"""
-    market = Market.Market.DBtoMarket(id)
+    market.DBtoMarket(id)
     market.deleteDB()
     specialMenu()
 
 
 def deleteOutcome(id):
     """Delete outcome"""
-    outcome = Outcome.Outcome.DBtoOutcome(id)
+    outcome.DBtoOutcome(id)
     outcome.deleteDB()
     specialMenu()
 

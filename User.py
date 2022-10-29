@@ -1,5 +1,4 @@
-from ast import Delete
-import data
+from array import array
 import sqlite3
 
 
@@ -78,6 +77,21 @@ class User:  # Class for user
     def removeBet(self, bet):  # Remove bet from the list of bets
         self.bets.remove(bet)
 
+    def getBetsDB(self):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM Bet WHERE user = ?", (self.id,))
+        data = c.fetchall()
+        outcomes = []
+        for bet in data:
+            c.execute("SELECT * FROM Outcome WHERE id = ?", (bet[1],))
+            dataOutcome = c.fetchone()
+            outcomes.append(str(dataOutcome[0]) + " -> " +
+                            str(dataOutcome[1]) + " -> " + str(dataOutcome[2]) + "\n")
+        conn.commit()
+        conn.close()
+        return outcomes
+
     def userToDB(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
@@ -147,3 +161,6 @@ class User:  # Class for user
         c.execute("DELETE FROM User WHERE id = ?", (self.id,))
         conn.commit()
         conn.close()
+
+    def __str__(self):
+        return "ID: " + str(self.id) + " Name: " + self.name + " Email: " + self.email + " Password: " + self.password + " Logged: " + str(self.logged) + " Bets: " + str(self.bets) + " Type: " + str(self.type) + " Wallet: " + str(self.wallet)

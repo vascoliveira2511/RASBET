@@ -7,28 +7,27 @@ from telnetlib import GA
 from tkinter import E
 from turtle import pen
 from unicodedata import name
-from classes.Bookmaker import Bookmaker
-from classes.Game import Game
-from classes.Market import Market
-from classes.Outcome import Outcome
-from classes.User import User
-import data
-from classes import *
+from User import User
+from Bookmaker import Bookmaker
+from Game import Game
+from Market import Market
+from Outcome import Outcome
 import sys
 
 
-games = data.getData()
+#games = data.getData()
 
-user = User.User(0, 'test', 'test', 'test', False, [], 2, 0)
-game = Game.Game(0, 'test', 'test', 'test', 'test', False, '')
-bookmaker = Bookmaker.Bookmaker(0, 'test', 'test')
-market = Market.Market(0, 'test')
-outcome = Outcome.Outcome(0, 'test', 0)
+user = User(0, 'test', 'test', 'test', False, [], 2, 0)
+game = Game(0, 'test', 'test', 'test', 'test', False, '')
+bookmaker = Bookmaker(0, 'test', 'test')
+market = Market(0, 'test')
+outcome = Outcome(0, 'test', 0)
 
 
 def checkLogin(email, password):
     """Check login"""
-    user = User.User.DBtoUser(email, password)
+    global user
+    user = User.DBtoUser(email, password)
     if user == None:
         print('\nInvalid credentials')
         loginMenu()
@@ -57,12 +56,13 @@ def login():
 
 def register():
     """Register"""
+    global user
     username = input('Username: ')
     password = input('Password: ')
     email = input('Email: ')
     type = input('Type: ')
     print('\nRegistering...')
-    user = User.User(0, username, email, password, False, [], type, 0)
+    user = User(0, username, email, password, False, [], type, 0)
     user.userToDB()
     print('\nRegistered successfully')
     loginMenu()
@@ -125,7 +125,9 @@ def viewOutcomeDB(id):
 
 def viewBets(user):
     """View bets"""
-    print("\n", user.getBets())
+    data = user.getBetsDB()
+    for row in data:
+        print("\n", row)
 
 
 def viewBalance(user):
@@ -251,7 +253,7 @@ def addGame():
 def addBookmaker(gameId):
     """Add bookmaker"""
     name = input('Name: ')
-    bookmaker = Bookmaker.Bookmaker(0, name)
+    bookmaker = Bookmaker(0, name)
     bookmaker.bookmarkToDB(gameId)
     specialMenu()
 
@@ -259,7 +261,7 @@ def addBookmaker(gameId):
 def addMarket(bookmarkId):
     """Add market"""
     name = input('Name: ')
-    market = Market.Market(0, name)
+    market = Market(0, name)
     market.marketToDB(bookmarkId)
     specialMenu()
 
@@ -268,7 +270,7 @@ def addOutcome(marketId):
     """Add outcome"""
     name = input('Name: ')
     price = input('Price: ')
-    outcome = Outcome.Outcome(0, name, price)
+    outcome = Outcome(0, name, price)
     outcome.outcomeToDB(marketId)
     specialMenu()
 

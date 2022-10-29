@@ -54,7 +54,7 @@ class Game:  # Class for the game itself
     def gameToDB(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("INSERT INTO Game VALUES (?, ?, ?, ?, ?, ?)",
+        c.execute("INSERT INTO Game(name, homeTeam, awayTeam, commenceTime, completed, scores) VALUES (?, ?, ?, ?, ?, ?)",
                   (self.id, self.homeTeam, self.awayTeam, self.commenceTime,  self.completed, self.scores))
         conn.commit()
         conn.close()

@@ -1,5 +1,5 @@
 from datetime import datetime
-from random import random
+from random import choice
 from secrets import choice
 import sqlite3
 import string
@@ -237,15 +237,15 @@ def loginMenu():
 
 def addGame():
     """Add game"""
-    name = ''.join(random.choice(string.ascii_uppercase + string.digits)
+    name = ''.join(choice(string.ascii_uppercase + string.digits)
                    for _ in range(32))
-    awayTeam = input('Away Team: ')
     homeTeam = input('Home Team: ')
+    awayTeam = input('Away Team: ')
     commenceTime = input('Commence Time: ')
     completed = False
     scores = ''
-    game = Game.Game(0, name, awayTeam, homeTeam,
-                     commenceTime, completed, scores)
+    game = Game(0, name, homeTeam, awayTeam,
+                commenceTime, completed, scores)
     game.gameToDB()
     specialMenu()
 

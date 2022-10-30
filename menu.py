@@ -446,7 +446,7 @@ def userMenu():
         changeUsername(user)
         userMenu()
     else:
-        print('Invalid choice')
+        print('\nInvalid choice')
         userMenu()
 
 

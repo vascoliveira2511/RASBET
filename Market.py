@@ -19,7 +19,7 @@ class Market:  # Class for the market
     def marketToDB(self, bookmarkId):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("INSERT INTO Market VALUES (?, ?)",
+        c.execute("INSERT INTO Market(key,bookmark) VALUES (?, ?)",
                   (self.key, bookmarkId))
         conn.commit()
         conn.close()
@@ -38,5 +38,12 @@ class Market:  # Class for the market
         c = conn.cursor()
         c.execute("UPDATE Market SET key=? WHERE id=?",
                   (self.key, self.id))
+        conn.commit()
+        conn.close()
+
+    def deleteMarketDB(self):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("DELETE FROM Market WHERE id=?", (self.id,))
         conn.commit()
         conn.close()

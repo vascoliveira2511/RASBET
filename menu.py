@@ -253,8 +253,9 @@ def addGame():
 def addBookmaker(gameId):
     """Add bookmaker"""
     name = input('Name: ')
-    bookmaker = Bookmaker(0, name)
-    bookmaker.bookmarkToDB(gameId)
+    lastUpdate = input('Last Update: ')
+    bookmaker = Bookmaker(0, name, lastUpdate)
+    bookmaker.bookmakerToDB(gameId)
     specialMenu()
 
 
@@ -282,7 +283,7 @@ def alterGame():
     id = input('Game ID: ')
     game = Game.DBtoGame(id)
     choice = 0
-    
+
     while 1:
         print('\n1 - Alter home team')
         print('2 - Alter away team')
@@ -309,55 +310,56 @@ def alterGame():
         elif choice == '6':
             game.updateGameDB()
             specialMenu()
-    
-
 
 
 def alterBookmaker(bookmarkId):
     """Alter bookmaker"""
     bookmaker.DBtoBookmaker(bookmarkId)
-    print('\n1 - Alter name')
-    print('2 - Back')
-    choice = input('\nChoice: ')
-    if choice == '1':
-        name = input('Name: ')
-        bookmaker.setName(name)
-        bookmaker.setLastUpdate(datetime.now())
-    elif choice == '2':
-        bookmaker.updateDB()
-        specialMenu()
+    while 1:
+        print('\n1 - Alter name')
+        print('2 - Back')
+        choice = input('\nChoice: ')
+        if choice == '1':
+            name = input('Name: ')
+            bookmaker.setKey(name)
+            bookmaker.setLastUpdate(datetime.now())
+        elif choice == '2':
+            bookmaker.updateBookmakerDB()
+            specialMenu()
 
 
 def alterMarket(marketId):
     """Alter market"""
     market.DBtoMarket(marketId)
-    print('\n1 - Alter name')
-    print('2 - Back')
-    choice = input('\nChoice: ')
-    if choice == '1':
-        name = input('Name: ')
-        market.setName(name)
-    elif choice == '2':
-        market.updateDB()
-        specialMenu()
+    while 1:
+        print('\n1 - Alter name')
+        print('2 - Back')
+        choice = input('\nChoice: ')
+        if choice == '1':
+            name = input('Name: ')
+            market.setKey(name)
+        elif choice == '2':
+            market.updateMarketDB()
+            specialMenu()
 
 
 def alterOutcome(outcomeId):
     """Alter outcome"""
     outcome.DBtoOutcome(outcomeId)
-    print('\n1 - Alter name')
-    print('2 - Alter price')
-    print('3 - Back')
-    choice = input('\nChoice: ')
-    if choice == '1':
-        name = input('Name: ')
-        outcome.setName(name)
-    elif choice == '2':
-        price = input('Price: ')
-        outcome.setPrice(price)
-    elif choice == '3':
-        outcome.updateDB()
-        specialMenu()
+    while 1:
+        print('\n1 - Alter name')
+        print('2 - Alter price')
+        print('3 - Back')
+        choice = input('\nChoice: ')
+        if choice == '1':
+            name = input('Name: ')
+            outcome.setName(name)
+        elif choice == '2':
+            price = input('Price: ')
+            outcome.setPrice(price)
+        elif choice == '3':
+            outcome.updateOutcomeDB()
+            specialMenu()
 
 
 def deleteGame(id):
@@ -371,21 +373,21 @@ def deleteGame(id):
 def deleteBookmaker(id):
     """Delete bookmaker"""
     bookmaker.DBtoBookmaker(id)
-    bookmaker.deleteDB()
+    bookmaker.deleteBookmakerDB()
     specialMenu()
 
 
 def deleteMarket(id):
     """Delete market"""
     market.DBtoMarket(id)
-    market.deleteDB()
+    market.deleteMarketDB()
     specialMenu()
 
 
 def deleteOutcome(id):
     """Delete outcome"""
     outcome.DBtoOutcome(id)
-    outcome.deleteDB()
+    outcome.deleteOutcomeDB()
     specialMenu()
 
 
@@ -425,12 +427,10 @@ def userMenu():
         userMenu()
     elif choice == '6':
         user.logout()
-        # TODO: Need to fix this
         user.updateDB()
         loginMenu()
     elif choice == '7':
         user.logout()
-        # TODO: Need to fix this
         user.updateDB()
         sys.exit()
     elif choice == '8':
@@ -461,14 +461,15 @@ def specialMenu():
     print('7 - Add Market to a Bookmaker')
     print('8 - Add Outcome to a Market')
     print('9 - Alter Game')
-    print('10 - Alter Bookmaker for a Game')
-    print('11 - Alter Market for a Bookmaker')
-    print('12 - Alter Outcome for a Market')
+    print('10 - Alter Bookmaker')
+    print('11 - Alter Market')
+    print('12 - Alter Outcome')
     print('13 - Delete Game')
-    print('14 - Delete Bookmaker for a Game')
-    print('15 - Delete Market for a Bookmaker')
-    print('16 - Delete Outcome for a Market')
+    print('14 - Delete Bookmaker')
+    print('15 - Delete Market')
+    print('16 - Delete Outcome')
     print('17 - logout')
+    print('18 - Exit')
     choice = input('\nChoice: ')
     if choice == '1':
         viewGamesDB()
@@ -492,6 +493,7 @@ def specialMenu():
         addMarket(input('Bookamer ID: '))
         specialMenu()
     elif choice == '8':
+        # TODO: Need to fix this, doesn't show name and price in DB
         addOutcome(input('Market ID: '))
         specialMenu()
     elif choice == '9':
@@ -504,6 +506,7 @@ def specialMenu():
         alterMarket(input('Market ID: '))
         specialMenu()
     elif choice == '12':
+        # TODO: Weird, here it shows name and price in DB
         alterOutcome(input('Outcome ID: '))
         specialMenu()
     elif choice == '13':
@@ -522,6 +525,10 @@ def specialMenu():
         user.logout()
         user.updateDB()
         loginMenu()
+    elif choice == '18':
+        user.logout()
+        user.updateDB()
+        sys.exit()
 
 
 def main():

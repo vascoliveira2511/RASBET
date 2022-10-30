@@ -26,7 +26,7 @@ class Outcome:  # Outcome of a bet
     def outcomeToDB(self, marketId):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("INSERT INTO Outcome VALUES (?, ?, ?)",
+        c.execute("INSERT INTO Outcome(name,price,market) VALUES (?, ?, ?)",
                   (self.name, self.price, marketId))
         conn.commit()
         conn.close()
@@ -41,11 +41,18 @@ class Outcome:  # Outcome of a bet
         self.price = row[2]
         conn.close()
 
-    def updateOutcomeDB(self, name, price):
+    def updateOutcomeDB(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
         c.execute("UPDATE Outcome SET name=?, price=? WHERE id=?",
-                  (name, price, self.id))
+                  (self.name, self.price, self.id))
+        conn.commit()
+        conn.close()
+
+    def deleteOutcomeDB(self):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("DELETE FROM Outcome WHERE id=?", (self.id,))
         conn.commit()
         conn.close()
 

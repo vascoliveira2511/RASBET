@@ -23,7 +23,7 @@ class Bookmaker:  # Class for bookmaker
     def bookmakerToDB(self, gameId):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("INSERT INTO Bookmaker VALUES (?, ?, ?)",
+        c.execute("INSERT INTO Bookmark(key,lastUpdate,game) VALUES (?, ?, ?)",
                   (self.key, self.lastUpdate, gameId))
         conn.commit()
         conn.close()
@@ -31,7 +31,7 @@ class Bookmaker:  # Class for bookmaker
     def DBtoBookmaker(self, id):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("SELECT * FROM Bookmaker WHERE id=?", (id,))
+        c.execute("SELECT * FROM Bookmark WHERE id=?", (id,))
         row = c.fetchone()
         self.id = row[0]
         self.key = row[1]
@@ -41,7 +41,14 @@ class Bookmaker:  # Class for bookmaker
     def updateBookmakerDB(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("UPDATE Bookmaker SET key=?, lastUpdate=? WHERE id=?",
+        c.execute("UPDATE Bookmark SET key=?, lastUpdate=? WHERE id=?",
                   (self.key, self.lastUpdate, self.id))
+        conn.commit()
+        conn.close()
+
+    def deleteBookmakerDB(self):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("DELETE FROM Bookmark WHERE id=?", (self.id,))
         conn.commit()
         conn.close()

@@ -5,7 +5,7 @@ import sqlite3
 import string
 from telnetlib import GA
 from tkinter import E
-from turtle import pen
+from turtle import pen, update
 from unicodedata import name
 from User import User
 from Bookmaker import Bookmaker
@@ -529,6 +529,31 @@ def specialMenu():
         user.logout()
         user.updateDB()
         sys.exit()
+
+
+def adminMenu():
+    print('\nAdmin Menu\n')
+    print('1 - View Games')
+    print('2 - View Bookmakers for a Game')
+    print('3 - View Markets for a Bookmaker')
+    print('4 - View Outcomes for a Market')
+    print('5 - Update bets')
+    choice = input('\nChoice: ')
+    if choice == '1':
+        viewGamesDB()
+        adminMenu()
+    elif choice == '2':
+        viewBookmakerBD(input('Game ID: '))
+        adminMenu()
+    elif choice == '3':
+        viewMarketDB(input('Bookamer ID: '))
+        adminMenu()
+    elif choice == '4':
+        viewOutcomeDB(input('Market ID: '))
+        adminMenu()
+    elif choice == '5':
+        updateBets()
+        adminMenu()
 
 
 def main():

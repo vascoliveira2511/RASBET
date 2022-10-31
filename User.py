@@ -86,8 +86,8 @@ class User:  # Class for user
         for bet in data:
             c.execute("SELECT * FROM Outcome WHERE id = ?", (bet[1],))
             dataOutcome = c.fetchone()
-            outcomes.append(str(dataOutcome[0]) + " -> " +
-                            str(dataOutcome[1]) + " -> " + str(dataOutcome[2]) + "\n")
+            outcomes.append(str(dataOutcome[0]) + " -> Money Spent:" +
+                            str(dataOutcome[3]) + ", Multiplier from outcome:" + str(dataOutcome[2]) + "\n")
         conn.commit()
         conn.close()
         return outcomes

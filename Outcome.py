@@ -3,10 +3,11 @@ import sqlite3
 
 class Outcome:  # Outcome of a bet
 
-    def __init__(self, id, name, price):  # Constructor
+    def __init__(self, id, name, price, state):  # Constructor
         self.id = id  # Outcome id
-        self.name = ""  # Name of the outcome
-        self.price = 0  # Price of the outcome
+        self.name = name  # Name of the outcome
+        self.price = price  # Price of the outcome
+        self.state = state  # State of the outcome
 
     def getId(self):  # Get id of the outcome
         return self.id
@@ -17,11 +18,17 @@ class Outcome:  # Outcome of a bet
     def getPrice(self):  # Get price of the outcome
         return self.price
 
+    def getState(self):  # Get state of the outcome
+        return self.state
+
     def setName(self, name):  # Set name of the outcome
         self.name = name
 
     def setPrice(self, price):  # Set price of the outcome
         self.price = price
+
+    def setState(self, state):  # Set state of the outcome
+        self.state = state
 
     def outcomeToDB(self, marketId):
         conn = sqlite3.connect('database.db')

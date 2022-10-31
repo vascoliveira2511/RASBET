@@ -1,5 +1,7 @@
 import sqlite3
 
+from Outcome import Outcome
+
 
 class Market:  # Class for the market
 
@@ -47,3 +49,15 @@ class Market:  # Class for the market
         c.execute("DELETE FROM Market WHERE id=?", (self.id,))
         conn.commit()
         conn.close()
+
+    def getOutcomes(self):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM Outcome WHERE market = ?", (self.id,))
+        outcomes = c.fetchall()
+        list = []
+        for outcome in outcomes:
+            list.append(
+                Outcome(outcome[0], outcome[1], outcome[2], outcome[3]))
+        conn.close()
+        return outcomes

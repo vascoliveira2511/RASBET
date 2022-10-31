@@ -276,6 +276,30 @@ def addOutcome(marketId):
     specialMenu()
 
 
+def updateEverythingBD(id):
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    game.DBtoGame(id)
+    result = game.getResults()
+    for bookmaker in game.getBookmakers():
+        for market in bookmaker.getMarkets():
+            for outcome in market.getOutcomes():
+                # Sets state of outcome to Closed
+                c.execute(
+                    "UPDATE Outcome SET status = 0 WHERE id = " + str(outcome.getId()))
+                # If the outcome is equal to the result, users must recieve their money
+                if outcome.getName() in result:
+                    c.execute("SELECT * FROM Bet WHERE outcome = " +
+                              str(outcome.getId()))
+                    bets = c.fetchall()
+                    for bet in bets:
+                        c.execute("UPDATE User SET wallet = wallet + " +
+                                  str(outcome.getPrice() * bet[3]) + " WHERE id = " + str(bet[2]))
+                # else here is if the user didn't bet on the outcome
+                # Maybe add a notification for the user that he didn't bet on the outcome
+    conn.commit()
+
+
 def alterGame():
     global game
     """Alter game"""
@@ -304,6 +328,7 @@ def alterGame():
         elif choice == '4':
             completed = input('Completed: ')
             game.setCompleted(completed)
+            updateEverythingBD(id)
         elif choice == '5':
             scores = input('Scores: ')
             game.setScores(scores)
@@ -364,9 +389,14 @@ def alterOutcome(outcomeId):
 
 def deleteGame(id):
     """Delete game"""
-    viewGamesDB()
     game = Game.DBtoGame(id)
     game.deleteDB()
+    for bookmaker in game.getBookmakers():
+        for market in bookmaker.getMarkets():
+            for outcome in market.getOutcomes():
+                outcome.deleteDB()
+            market.deleteDB()
+        bookmaker.deleteDB()
     specialMenu()
 
 
@@ -374,6 +404,10 @@ def deleteBookmaker(id):
     """Delete bookmaker"""
     bookmaker.DBtoBookmaker(id)
     bookmaker.deleteBookmakerDB()
+    for market in bookmaker.getMarkets():
+        for outcome in market.getOutcomes():
+            outcome.deleteDB()
+        market.deleteDB()
     specialMenu()
 
 
@@ -381,6 +415,8 @@ def deleteMarket(id):
     """Delete market"""
     market.DBtoMarket(id)
     market.deleteMarketDB()
+    for outcome in market.getOutcomes():
+        outcome.deleteDB()
     specialMenu()
 
 
@@ -552,7 +588,7 @@ def adminMenu():
         viewOutcomeDB(input('Market ID: '))
         adminMenu()
     elif choice == '5':
-        updateBets()
+        updateOutcomes()
         adminMenu()
 
 

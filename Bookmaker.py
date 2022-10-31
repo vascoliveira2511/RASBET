@@ -1,5 +1,7 @@
 import sqlite3
 
+from Market import Market
+
 
 class Bookmaker:  # Class for bookmaker
 
@@ -52,3 +54,14 @@ class Bookmaker:  # Class for bookmaker
         c.execute("DELETE FROM Bookmark WHERE id=?", (self.id,))
         conn.commit()
         conn.close()
+
+    def getMarkets(self):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM Market WHERE bookmaker = ?", (self.id,))
+        markets = c.fetchall()
+        list = []
+        for market in markets:
+            list.append(Market(market[0], market[1]))
+        conn.close()
+        return markets

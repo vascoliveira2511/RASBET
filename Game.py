@@ -1,5 +1,7 @@
 import sqlite3
 
+from Bookmaker import Bookmaker
+
 
 class Game:  # Class for the game itself
 
@@ -51,6 +53,15 @@ class Game:  # Class for the game itself
     def setScores(self, scores):  # Set game scores
         self.scores = scores
 
+    def result(self):
+        scores = self.scores.split('x')
+        if scores[0] > scores[1]:
+            return self.homeTeam
+        elif scores[0] < scores[1]:
+            return self.awayTeam
+        else:
+            return 'Draw'
+
     def gameToDB(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
@@ -75,10 +86,23 @@ class Game:  # Class for the game itself
                   (self.name, self.homeTeam, self.awayTeam, self.commenceTime, self.completed, self.scores, self.id))
         conn.commit()
         conn.close()
-    
+
     def deleteDB(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
         c.execute("DELETE FROM Game WHERE id = ?", (self.id,))
         conn.commit()
         conn.close()
+
+    def getBookmakers(self):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM Bookmaker WHERE game = ?", (self.id,))
+        bookmakers = c.fetchall()
+        list = []
+        for bookmaker in bookmakers:
+            list.append(Bookmaker(
+                bookmaker[0], bookmaker[1], bookmaker[2]))
+        conn.commit()
+        conn.close()
+        return bookmakers

@@ -33,8 +33,8 @@ class Outcome:  # Outcome of a bet
     def outcomeToDB(self, marketId):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("INSERT INTO Outcome(name,price,market) VALUES (?, ?, ?)",
-                  (self.name, self.price, marketId))
+        c.execute("INSERT INTO Outcome(name,price,state,market) VALUES (?, ?, ?, ?)",
+                  (self.name, self.price, 1, marketId))
         conn.commit()
         conn.close()
 

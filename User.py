@@ -87,7 +87,7 @@ class User:  # Class for user
             c.execute("SELECT * FROM Outcome WHERE id = ?", (bet[1],))
             dataOutcome = c.fetchone()
             outcomes.append(str(dataOutcome[0]) + " -> Money Spent:" +
-                            str(dataOutcome[3]) + ", Multiplier from outcome:" + str(dataOutcome[2]) + "\n")
+                            str(bet[3]) + ", Multiplier from outcome:" + str(dataOutcome[2]) + "\n")
         conn.commit()
         conn.close()
         return outcomes
@@ -139,11 +139,11 @@ class User:  # Class for user
         conn.commit()
         conn.close()
 
-    def insertBetDB(self, Outcomeid):
+    def insertBetDB(self, Outcomeid, amountBet):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("INSERT INTO Bet(user, outcome) VALUES (?, ?)",
-                  (self.id, Outcomeid))
+        c.execute("INSERT INTO Bet(outcome, user, amountBet) VALUES (?, ?, ?)",
+                  (Outcomeid, self.id, amountBet))
         conn.commit()
         conn.close()
 

@@ -97,7 +97,7 @@ class Game:  # Class for the game itself
     def getBookmakers(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("SELECT * FROM Bookmaker WHERE game = ?", (self.id,))
+        c.execute("SELECT * FROM Bookmark WHERE game = ?", (self.id,))
         bookmakers = c.fetchall()
         list = []
         for bookmaker in bookmakers:

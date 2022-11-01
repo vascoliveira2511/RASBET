@@ -21,7 +21,7 @@ user = User(0, 'test', 'test', 'test', False, [], 2, 0)
 game = Game(0, 'test', 'test', 'test', 'test', False, '')
 bookmaker = Bookmaker(0, 'test', 'test')
 market = Market(0, 'test')
-outcome = Outcome(0, 'test', 0)
+outcome = Outcome(0, 'test', 0, 1)
 
 
 def checkLogin(email, password):
@@ -144,7 +144,11 @@ def deposit(user):
 def withdraw(user):
     """Withdraw"""
     amount = float(input('Amount: '))
-    user.withdraw(amount)
+    if user.getWallet() < amount:
+        print('\nNot enough money')
+    else:
+        user.withdraw(amount)
+        print('\nWithdrawn successfully')
 
 
 def deleteAccount():
@@ -174,12 +178,13 @@ def placeBet():
     """Place bet"""
     id = input('Outcome ID: ')
     outcome.DBtoOutcome(id)
-    price = outcome.getPrice()
-    if user.getWallet() < price:
+    print('Amount: ')
+    amount = float(input())
+    if user.getWallet() < amount:
         print('\nNot enough money')
     else:
-        user.withdraw(price)
-        user.insertBetDB(id)
+        user.withdraw(amount)
+        user.insertBetDB(id, amount)
         user.addBet(id)
         print('\nBet placed successfully')
     bet()
@@ -253,8 +258,7 @@ def addGame():
 def addBookmaker(gameId):
     """Add bookmaker"""
     name = input('Name: ')
-    lastUpdate = input('Last Update: ')
-    bookmaker = Bookmaker(0, name, lastUpdate)
+    bookmaker = Bookmaker(0, name, datetime.now())
     bookmaker.bookmakerToDB(gameId)
     specialMenu()
 
@@ -271,17 +275,18 @@ def addOutcome(marketId):
     """Add outcome"""
     name = input('Name: ')
     price = input('Price: ')
-    outcome = Outcome(0, name, price)
+    outcome = Outcome(0, name, price, 1)
     outcome.outcomeToDB(marketId)
     specialMenu()
 
 
-def updateEverythingBD(id):
+def gameEnded(id):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
-    game.DBtoGame(id)
-    result = game.getResults()
+    game = Game.DBtoGame(id)
+    result = game.result()
     for bookmaker in game.getBookmakers():
+        print(bookmaker)
         for market in bookmaker.getMarkets():
             for outcome in market.getOutcomes():
                 # Sets state of outcome to Closed
@@ -328,10 +333,12 @@ def alterGame():
         elif choice == '4':
             completed = input('Completed: ')
             game.setCompleted(completed)
-            updateEverythingBD(id)
+            game.updateGameDB()
+            gameEnded(id)
         elif choice == '5':
             scores = input('Scores: ')
             game.setScores(scores)
+            game.updateGameDB()
         elif choice == '6':
             game.updateGameDB()
             specialMenu()
@@ -588,7 +595,7 @@ def adminMenu():
         viewOutcomeDB(input('Market ID: '))
         adminMenu()
     elif choice == '5':
-        updateOutcomes()
+        gameEnded(input('Game ID: '))
         adminMenu()
 
 

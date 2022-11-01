@@ -18,7 +18,7 @@ class Bet:
 
     def setState(self, state):
         self.state = state
-    
+
     def setAmountBet(self, amountBet):
         self.amountBet = amountBet
 
@@ -30,12 +30,11 @@ class Bet:
         conn.commit()
         conn.close()
 
-    def DBtoBet(self, id):
+    def DBtoBet(id):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
         c.execute("SELECT * FROM bets WHERE id = ?", (id,))
-        data = c.fetchone()
-        self.id = data[0]
-        self.amountBet = data[3]
-        self.state = data[4]
+        bet = c.fetchone()
+        conn.commit()
         conn.close()
+        return Bet(bet[0], bet[3], bet[4])

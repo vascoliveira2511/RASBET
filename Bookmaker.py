@@ -30,15 +30,14 @@ class Bookmaker:  # Class for bookmaker
         conn.commit()
         conn.close()
 
-    def DBtoBookmaker(self, id):
+    def DBtoBookmaker(id):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
         c.execute("SELECT * FROM Bookmark WHERE id=?", (id,))
-        row = c.fetchone()
-        self.id = row[0]
-        self.key = row[1]
-        self.lastUpdate = row[2]
+        bookmaker = c.fetchone()
+        conn.commit()
         conn.close()
+        return Bookmaker(bookmaker[0], bookmaker[1], bookmaker[2])
 
     def updateBookmakerDB(self):
         conn = sqlite3.connect('database.db')
@@ -61,9 +60,8 @@ class Bookmaker:  # Class for bookmaker
         c.execute("SELECT * FROM Market WHERE bookmaker = ?", (self.id,))
         markets = c.fetchall()
         list = []
-        market = Market(0, 'test')
         for market in markets:
-            list.append(market.DBtoMarket(str(market[0])))
+            list.append(Market.DBtoMarket(str(market[0])))
         conn.close()
         return markets
 

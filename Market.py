@@ -26,14 +26,14 @@ class Market:  # Class for the market
         conn.commit()
         conn.close()
 
-    def DBtoMarket(self, id):
+    def DBtoMarket(id):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
         c.execute("SELECT * FROM Market WHERE id=?", (id,))
-        row = c.fetchone()
-        self.id = row[0]
-        self.key = row[1]
+        market = c.fetchone()
+        conn.commit()
         conn.close()
+        return Market(market[0], market[1])
 
     def updateMarketDB(self):
         conn = sqlite3.connect('database.db')
@@ -56,8 +56,7 @@ class Market:  # Class for the market
         c.execute("SELECT * FROM Outcome WHERE market = ?", (self.id,))
         outcomes = c.fetchall()
         list = []
-        outcome = Outcome(0, 'test', 0, 1)
         for outcome in outcomes:
-            list.append(outcome.DBtoOutcome(str(outcome[0])))
+            list.append(Outcome.DBtoOutcome(str(outcome[0])))
         conn.close()
         return outcomes

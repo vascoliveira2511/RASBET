@@ -38,15 +38,14 @@ class Outcome:  # Outcome of a bet
         conn.commit()
         conn.close()
 
-    def DBtoOutcome(self, id):
+    def DBtoOutcome(id):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
         c.execute("SELECT * FROM Outcome WHERE id=?", (id,))
-        row = c.fetchone()
-        self.id = row[0]
-        self.name = row[1]
-        self.price = row[2]
+        outcome = c.fetchone()
+        conn.commit()
         conn.close()
+        return Outcome(outcome[0], outcome[1], outcome[2], outcome[3])
 
     def updateOutcomeDB(self):
         conn = sqlite3.connect('database.db')

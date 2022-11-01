@@ -176,8 +176,9 @@ def changeUsername(user):
 
 def placeBet():
     """Place bet"""
+    global outcome
     id = input('Outcome ID: ')
-    outcome.DBtoOutcome(id)
+    outcome = Outcome.DBtoOutcome(id)
     print('Amount: ')
     amount = float(input())
     if user.getWallet() < amount:
@@ -281,12 +282,12 @@ def addOutcome(marketId):
 
 
 def gameEnded(id):
+    global game
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
     game = Game.DBtoGame(id)
     result = game.result()
     for bookmaker in game.getBookmakers():
-        print(bookmaker)
         for market in bookmaker.getMarkets():
             for outcome in market.getOutcomes():
                 # Sets state of outcome to Closed
@@ -343,7 +344,8 @@ def alterGame():
 
 def alterBookmaker(bookmarkId):
     """Alter bookmaker"""
-    bookmaker.DBtoBookmaker(bookmarkId)
+    global bookmaker
+    bookmaker = Bookmaker.DBtoBookmaker(bookmarkId)
     while 1:
         print('\n1 - Alter name')
         print('2 - Back')
@@ -359,7 +361,8 @@ def alterBookmaker(bookmarkId):
 
 def alterMarket(marketId):
     """Alter market"""
-    market.DBtoMarket(marketId)
+    global market
+    market = Market.DBtoMarket(marketId)
     while 1:
         print('\n1 - Alter name')
         print('2 - Back')
@@ -374,7 +377,8 @@ def alterMarket(marketId):
 
 def alterOutcome(outcomeId):
     """Alter outcome"""
-    outcome.DBtoOutcome(outcomeId)
+    global outcome
+    outcome = Outcome.DBtoOutcome(outcomeId)
     while 1:
         print('\n1 - Alter name')
         print('2 - Alter price')
@@ -393,6 +397,7 @@ def alterOutcome(outcomeId):
 
 def deleteGame(id):
     """Delete game"""
+    global game
     game = Game.DBtoGame(id)
     game.deleteDB()
     for bookmaker in game.getBookmakers():
@@ -406,7 +411,8 @@ def deleteGame(id):
 
 def deleteBookmaker(id):
     """Delete bookmaker"""
-    bookmaker.DBtoBookmaker(id)
+    global bookmaker
+    bookmaker = Bookmaker.DBtoBookmaker(id)
     bookmaker.deleteBookmakerDB()
     for market in bookmaker.getMarkets():
         for outcome in market.getOutcomes():
@@ -417,7 +423,8 @@ def deleteBookmaker(id):
 
 def deleteMarket(id):
     """Delete market"""
-    market.DBtoMarket(id)
+    global market
+    market = Market.DBtoMarket(id)
     market.deleteMarketDB()
     for outcome in market.getOutcomes():
         outcome.deleteDB()
@@ -426,7 +433,8 @@ def deleteMarket(id):
 
 def deleteOutcome(id):
     """Delete outcome"""
-    outcome.DBtoOutcome(id)
+    global outcome
+    outcome = Outcome.DBtoOutcome(id)
     outcome.deleteOutcomeDB()
     specialMenu()
 

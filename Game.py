@@ -104,4 +104,4 @@ class Game:  # Class for the game itself
             list.append(Bookmaker.DBtoBookmaker(str(bookmaker[0])))
         conn.commit()
         conn.close()
-        return bookmakers
+        return list

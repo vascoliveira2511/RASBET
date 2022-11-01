@@ -3,10 +3,6 @@ from random import choice
 from secrets import choice
 import sqlite3
 import string
-from telnetlib import GA
-from tkinter import E
-from turtle import pen, update
-from unicodedata import name
 from User import User
 from Bookmaker import Bookmaker
 from Game import Game
@@ -179,6 +175,9 @@ def placeBet():
     global outcome
     id = input('Outcome ID: ')
     outcome = Outcome.DBtoOutcome(id)
+    if outcome.getState() == False:
+        print('\nOutcome is closed')
+        bet()
     print('Amount: ')
     amount = float(input())
     if user.getWallet() < amount:
@@ -292,7 +291,7 @@ def gameEnded(id):
             for outcome in market.getOutcomes():
                 # Sets state of outcome to Closed
                 c.execute(
-                    "UPDATE Outcome SET status = 0 WHERE id = " + str(outcome.getId()))
+                    "UPDATE Outcome SET state = 0 WHERE id = " + str(outcome.getId()))
                 # If the outcome is equal to the result, users must recieve their money
                 if outcome.getName() in result:
                     c.execute("SELECT * FROM Bet WHERE outcome = " +

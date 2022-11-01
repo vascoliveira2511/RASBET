@@ -57,13 +57,13 @@ class Bookmaker:  # Class for bookmaker
     def getMarkets(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("SELECT * FROM Market WHERE bookmaker = ?", (self.id,))
+        c.execute("SELECT * FROM Market WHERE bookmark = ?", (self.id,))
         markets = c.fetchall()
         list = []
         for market in markets:
             list.append(Market.DBtoMarket(str(market[0])))
         conn.close()
-        return markets
+        return list
 
     def __str__(self):
         return "Bookmaker id: " + str(self.id) + " key: " + self.key + " lastUpdate: " + str(self.lastUpdate)

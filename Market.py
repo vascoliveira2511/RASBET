@@ -59,4 +59,4 @@ class Market:  # Class for the market
         for outcome in outcomes:
             list.append(Outcome.DBtoOutcome(str(outcome[0])))
         conn.close()
-        return outcomes
+        return list

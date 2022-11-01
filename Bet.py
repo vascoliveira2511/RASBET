@@ -4,8 +4,8 @@ import sqlite3
 class Bet:
     def __init__(self, id, amountBet, state):
         self.id = id
-        self.state = state
         self.amountBet = amountBet
+        self.state = state
 
     def getId(self):
         return self.id

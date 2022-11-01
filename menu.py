@@ -41,7 +41,7 @@ def checkLogin(email, password):
             specialMenu()
         elif(user.getType() == 0):
             # TODO: admin menu
-            specialMenu()
+            adminMenu()
         else:
             print('Error')
             loginMenu()
@@ -333,12 +333,9 @@ def alterGame():
         elif choice == '4':
             completed = input('Completed: ')
             game.setCompleted(completed)
-            game.updateGameDB()
-            gameEnded(id)
         elif choice == '5':
             scores = input('Scores: ')
             game.setScores(scores)
-            game.updateGameDB()
         elif choice == '6':
             game.updateGameDB()
             specialMenu()
@@ -580,7 +577,7 @@ def adminMenu():
     print('2 - View Bookmakers for a Game')
     print('3 - View Markets for a Bookmaker')
     print('4 - View Outcomes for a Market')
-    print('5 - Update bets')
+    print('5 - Update bets for game')
     choice = input('\nChoice: ')
     if choice == '1':
         viewGamesDB()

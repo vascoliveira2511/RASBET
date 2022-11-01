@@ -56,8 +56,8 @@ class Market:  # Class for the market
         c.execute("SELECT * FROM Outcome WHERE market = ?", (self.id,))
         outcomes = c.fetchall()
         list = []
+        outcome = Outcome(0, 'test', 0, 1)
         for outcome in outcomes:
-            list.append(
-                Outcome(outcome[0], outcome[1], outcome[2], outcome[3]))
+            list.append(outcome.DBtoOutcome(str(outcome[0])))
         conn.close()
         return outcomes

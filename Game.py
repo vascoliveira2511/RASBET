@@ -100,9 +100,10 @@ class Game:  # Class for the game itself
         c.execute("SELECT * FROM Bookmark WHERE game = ?", (self.id,))
         bookmakers = c.fetchall()
         list = []
+        bookmaker = Bookmaker(0, 'test', 'test')
         for bookmaker in bookmakers:
-            list.append(Bookmaker(
-                bookmaker[0], bookmaker[1], bookmaker[2]))
+            print(bookmaker)
+            list.append(bookmaker.DBtoBookmaker(str(bookmaker[0])))
         conn.commit()
         conn.close()
         return bookmakers

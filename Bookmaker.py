@@ -61,7 +61,11 @@ class Bookmaker:  # Class for bookmaker
         c.execute("SELECT * FROM Market WHERE bookmaker = ?", (self.id,))
         markets = c.fetchall()
         list = []
+        market = Market(0, 'test')
         for market in markets:
-            list.append(Market(market[0], market[1]))
+            list.append(market.DBtoMarket(str(market[0])))
         conn.close()
         return markets
+
+    def __str__(self):
+        return "Bookmaker id: " + str(self.id) + " key: " + self.key + " lastUpdate: " + str(self.lastUpdate)

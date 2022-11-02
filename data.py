@@ -25,7 +25,7 @@ def createTables():  # Create tables
     c.execute('CREATE TABLE IF NOT EXISTS Game (id INTEGER PRIMARY KEY, name varchar(100), homeTeam varchar(100), awayTeam varchar(100), commenceTime varchar(100), completed boolean, scores varchar(100))')
     c.execute('CREATE TABLE IF NOT EXISTS Bookmark (id INTEGER PRIMARY KEY, key varchar(100), lastUpdate varchar(100), game INTEGER, FOREIGN KEY(game) REFERENCES Game(id))')
     c.execute('CREATE TABLE IF NOT EXISTS Market (id INTEGER PRIMARY KEY, key varchar(100), bookmark INTEGER, FOREIGN KEY(bookmark) REFERENCES Bookmark(id))')
-    c.execute('CREATE TABLE IF NOT EXISTS Outcome (id INTEGER PRIMARY KEY, name varchar(100), price FLOAT, state varchar(100), market INTEGER, FOREIGN KEY(market) REFERENCES Market(id))')
+    c.execute('CREATE TABLE IF NOT EXISTS Outcome (id INTEGER PRIMARY KEY, name varchar(100), price FLOAT, state boolean, market INTEGER, FOREIGN KEY(market) REFERENCES Market(id))')
     c.execute(
         'CREATE TABLE IF NOT EXISTS User (id INTEGER PRIMARY KEY, name varchar(100), email varchar(100), password varchar(100), logged boolean, type INTEGER, wallet FLOAT)')
     c.execute('CREATE TABLE IF NOT EXISTS Bet (id INTEGER PRIMARY KEY,outcome INTEGER, user INTEGER, amountBet FLOAT, state boolean, FOREIGN KEY(user) REFERENCES User(id), FOREIGN KEY(outcome) REFERENCES Outcome(id))')

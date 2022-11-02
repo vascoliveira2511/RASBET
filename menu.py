@@ -175,7 +175,6 @@ def placeBet():
     global outcome
     id = input('Outcome ID: ')
     outcome = Outcome.DBtoOutcome(id)
-    print(outcome)
     if outcome.getState() == False:
         print('\nOutcome is closed')
         return

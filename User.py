@@ -142,8 +142,8 @@ class User:  # Class for user
     def insertBetDB(self, Outcomeid, amountBet):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("INSERT INTO Bet(outcome, user, amountBet) VALUES (?, ?, ?)",
-                  (Outcomeid, self.id, amountBet))
+        c.execute("INSERT INTO Bet(outcome, user, amountBet, state) VALUES (?, ?, ?, ?)",
+                  (Outcomeid, self.id, amountBet, 0))
         conn.commit()
         conn.close()
 

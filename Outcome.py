@@ -62,8 +62,5 @@ class Outcome:  # Outcome of a bet
         conn.commit()
         conn.close()
 
-    def __eq__(self, other):  # Compare two outcomes
-        return self.name == other.name and self.price == other.price
-
-    def __str__(self):  # String representation of outcome
-        return self.name + " " + str(self.price)
+    def __str__(self):
+        return str(self.id) + ' ' + self.name + ' ' + str(self.price) + ' ' + str(self.state)

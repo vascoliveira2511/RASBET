@@ -175,9 +175,10 @@ def placeBet():
     global outcome
     id = input('Outcome ID: ')
     outcome = Outcome.DBtoOutcome(id)
+    print(outcome)
     if outcome.getState() == False:
         print('\nOutcome is closed')
-        bet()
+        return
     print('Amount: ')
     amount = float(input())
     if user.getWallet() < amount:
@@ -187,7 +188,6 @@ def placeBet():
         user.insertBetDB(id, amount)
         user.addBet(id)
         print('\nBet placed successfully')
-    bet()
 
 
 def bet():
@@ -285,24 +285,29 @@ def gameEnded(id):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
     game = Game.DBtoGame(id)
-    result = game.result()
-    for bookmaker in game.getBookmakers():
-        for market in bookmaker.getMarkets():
-            for outcome in market.getOutcomes():
-                # Sets state of outcome to Closed
-                c.execute(
-                    "UPDATE Outcome SET state = 0 WHERE id = " + str(outcome.getId()))
-                # If the outcome is equal to the result, users must recieve their money
-                if outcome.getName() in result:
+    if game.getCompleted() == True and game.getScores() != '':
+        result = game.result()
+        for bookmaker in game.getBookmakers():
+            for market in bookmaker.getMarkets():
+                for outcome in market.getOutcomes():
+                    # Sets state of outcome to Closed
+                    c.execute(
+                        "UPDATE Outcome SET state = 0 WHERE id = " + str(outcome.getId()))
+                    # If the outcome is equal to the result, users must recieve their money
+
                     c.execute("SELECT * FROM Bet WHERE outcome = " +
-                              str(outcome.getId()))
+                              str(outcome.getId()) + " AND state = 0")
                     bets = c.fetchall()
                     for bet in bets:
-                        c.execute("UPDATE User SET wallet = wallet + " +
-                                  str(outcome.getPrice() * bet[3]) + " WHERE id = " + str(bet[2]))
-                # else here is if the user didn't bet on the outcome
-                # Maybe add a notification for the user that he didn't bet on the outcome
+                        if outcome.getName() in result:
+                            c.execute("UPDATE User SET wallet = wallet + " +
+                                      str(outcome.getPrice() * bet[3]) + " WHERE id = " + str(bet[2]))
+                        c.execute(
+                            "UPDATE Bet SET state = 1 WHERE id = " + str(bet[0]))
+                    # else here is if the user didn't bet on the outcome
+                    # Maybe add a notification for the user that he didn't bet on the outcome
     conn.commit()
+    conn.close()
 
 
 def alterGame():
@@ -585,6 +590,8 @@ def adminMenu():
     print('3 - View Markets for a Bookmaker')
     print('4 - View Outcomes for a Market')
     print('5 - Update bets for game')
+    print('6 - logout')
+    print('7 - Exit')
     choice = input('\nChoice: ')
     if choice == '1':
         viewGamesDB()
@@ -601,6 +608,14 @@ def adminMenu():
     elif choice == '5':
         gameEnded(input('Game ID: '))
         adminMenu()
+    elif choice == '6':
+        user.logout()
+        user.updateDB()
+        loginMenu()
+    elif choice == '7':
+        user.logout()
+        user.updateDB()
+        sys.exit()
 
 
 def main():

@@ -213,6 +213,7 @@ def bet():
         bet()
     elif choice == '5':
         placeBet()
+        user.updateDB()
         bet()
     elif choice == '6':
         userMenu()
@@ -472,9 +473,11 @@ def userMenu():
         userMenu()
     elif choice == '4':
         deposit(user)
+        user.updateDB()
         userMenu()
     elif choice == '5':
         withdraw(user)
+        user.updateDB()
         userMenu()
     elif choice == '6':
         user.logout()

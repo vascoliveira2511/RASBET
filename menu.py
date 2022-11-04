@@ -407,9 +407,9 @@ def deleteGame(id):
     for bookmaker in game.getBookmakers():
         for market in bookmaker.getMarkets():
             for outcome in market.getOutcomes():
-                outcome.deleteDB()
-            market.deleteDB()
-        bookmaker.deleteDB()
+                outcome.deleteOutcomeDB()
+            market.deleteMarketDB()
+        bookmaker.deleteBookmakerDB()
     specialMenu()
 
 
@@ -420,8 +420,8 @@ def deleteBookmaker(id):
     bookmaker.deleteBookmakerDB()
     for market in bookmaker.getMarkets():
         for outcome in market.getOutcomes():
-            outcome.deleteDB()
-        market.deleteDB()
+            outcome.deleteOutcomeDB()
+        market.deleteMarketDB()
     specialMenu()
 
 
@@ -431,7 +431,7 @@ def deleteMarket(id):
     market = Market.DBtoMarket(id)
     market.deleteMarketDB()
     for outcome in market.getOutcomes():
-        outcome.deleteDB()
+        outcome.deleteOutcomeDB()
     specialMenu()
 
 

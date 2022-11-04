@@ -524,6 +524,11 @@ def specialMenu():
     print('16 - Delete Outcome')
     print('17 - logout')
     print('18 - Exit')
+    print('\nOPTIONS\n')
+    print('19 - Delete account')
+    print('20 - Change password')
+    print('21 - Change email')
+    print('22 - Change username')
     choice = input('\nChoice: ')
     if choice == '1':
         viewGamesDB()
@@ -547,7 +552,6 @@ def specialMenu():
         addMarket(input('Bookamer ID: '))
         specialMenu()
     elif choice == '8':
-        # TODO: Need to fix this, doesn't show name and price in DB
         addOutcome(input('Market ID: '))
         specialMenu()
     elif choice == '9':
@@ -560,7 +564,6 @@ def specialMenu():
         alterMarket(input('Market ID: '))
         specialMenu()
     elif choice == '12':
-        # TODO: Weird, here it shows name and price in DB
         alterOutcome(input('Outcome ID: '))
         specialMenu()
     elif choice == '13':
@@ -583,6 +586,18 @@ def specialMenu():
         user.logout()
         user.updateDB()
         sys.exit()
+    elif choice == '19':
+        deleteAccount(user)
+        loginMenu()
+    elif choice == '20':
+        changePassword(user)
+        specialMenu()
+    elif choice == '21':
+        changeEmail(user)
+        specialMenu()
+    elif choice == '22':
+        changeUsername(user)
+        specialMenu()
 
 
 def adminMenu():
@@ -594,6 +609,11 @@ def adminMenu():
     print('5 - Update bets for game')
     print('6 - logout')
     print('7 - Exit')
+    print('\nOPTIONS\n')
+    print('8 - Delete account')
+    print('9 - Change password')
+    print('10 - Change email')
+    print('11 - Change username')
     choice = input('\nChoice: ')
     if choice == '1':
         viewGamesDB()
@@ -618,6 +638,18 @@ def adminMenu():
         user.logout()
         user.updateDB()
         sys.exit()
+    elif choice == '8':
+        deleteAccount(user)
+        loginMenu()
+    elif choice == '9':
+        changePassword(user)
+        adminMenu()
+    elif choice == '10':
+        changeEmail(user)
+        adminMenu()
+    elif choice == '11':
+        changeUsername(user)
+        adminMenu()
 
 
 def main():

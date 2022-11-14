@@ -131,3 +131,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+# Override User model
+
+AUTH_USER_MODEL = 'rasbet.User'

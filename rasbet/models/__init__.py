@@ -1,1 +1,2 @@
-from .xpto import *
+from .user import *
+from .wallet import *

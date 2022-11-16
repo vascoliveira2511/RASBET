@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class Game(models.Model):
     name = models.CharField(
         max_length=100, primary_key=True)  # name of the game used as primary key

@@ -2,7 +2,6 @@ from django.db import models
 from . import Market
 from . import Bookmaker
 
-
 class Outcome(models.Model):
     # result of the outcome in the format name of the team or Draw
     result = models.CharField(max_length=100)

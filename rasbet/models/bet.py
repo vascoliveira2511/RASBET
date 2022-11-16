@@ -1,7 +1,6 @@
 from django.db import models
 from . import User
 
-
 class Bet(models.Model):
 
     stake = models.FloatField()  # the amount of money the user bets

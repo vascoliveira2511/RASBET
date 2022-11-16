@@ -1,7 +1,6 @@
 from django.db import models
 from . import Game
 
-
 class Bookmaker(models.Model):
     key = models.CharField(max_length=100)  # key of the bookmark
     lastUpdate = models.DateTimeField()  # last update of the bookmark

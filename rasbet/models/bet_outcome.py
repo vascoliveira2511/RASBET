@@ -2,7 +2,6 @@ from django.db import models
 from . import Bet
 from . import Outcome
 
-
 class BetOutcome(models.Model):
     status = models.CharField(
         max_length=100, default="pending")  # pending, won or lost

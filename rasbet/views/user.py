@@ -1,13 +1,7 @@
-from django.contrib.auth.models import User
-from rest_framework import serializers, viewsets
-
-# Serializers define the API representation.
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ['url', 'username', 'email', 'is_staff']
-
-# ViewSets define the view behavior.
+from ..models import User
+from ..serializers import UserSerializer
+from rest_framework import viewsets, permissions
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]

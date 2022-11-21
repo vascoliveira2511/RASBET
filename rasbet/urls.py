@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework import routers
-from .views import UserViewSet
+from .views import UserViewSet, TokenObtainPairView, RegisterView
+from rest_framework_simplejwt.views import TokenRefreshView
 
 
 # Routers provide an easy way of automatically determining the URL conf.
@@ -11,5 +12,8 @@ router.register(r'users', UserViewSet,basename="user")
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('register/', RegisterView.as_view(), name='auth_register'),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

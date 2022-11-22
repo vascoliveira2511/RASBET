@@ -1,5 +1,5 @@
 from django.db import models
-from . import User
+from .user import User
 
 class Bet(models.Model):
 
@@ -8,7 +8,7 @@ class Bet(models.Model):
     time = models.DateTimeField()  # the time the bet was made
     status = models.CharField(
         max_length=100, default="pending")  # pending, won or lost
-    won = models.FloatField(default=0.0)  # the amount of money the user won
+    prize = models.FloatField(default=0.0)  # the amount of money the user won
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, verbose_name="the related user")  # the user who made the bet
 

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rasbet',
     'rest_framework',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [

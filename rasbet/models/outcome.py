@@ -1,6 +1,6 @@
 from django.db import models
-from . import Market
-from . import Bookmaker
+from .market import Market
+from .bookmaker import Bookmaker
 
 class Outcome(models.Model):
     # result of the outcome in the format name of the team or Draw

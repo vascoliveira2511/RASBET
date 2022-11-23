@@ -1,11 +1,11 @@
 from django.db import models
-from . import Game
+from .game import Game
 
 class Bookmaker(models.Model):
-    key = models.CharField(max_length=100)  # key of the bookmark
-    lastUpdate = models.DateTimeField()  # last update of the bookmark
+    key = models.CharField(max_length=100)  # key of the bookmaker
+    last_update = models.DateTimeField()  # last update of the bookmaker
     game = models.ForeignKey(
-        Game, on_delete=models.CASCADE, verbose_name="the related game")  # game of the bookmark
+        Game, on_delete=models.CASCADE, verbose_name="the related game")  # game of the bookmaker
 
     def __str__(self):
-        return self.key + " " + str(self.lastUpdate) + " " + str(self.game)
+        return self.key + " " + str(self.last_update) + " " + str(self.game)

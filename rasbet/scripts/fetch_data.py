@@ -64,7 +64,10 @@ def update_bookmaker(bookmaker, last_update):
     return bookmaker
 
 def convert_to_datetime(datetime_string):
-    return datetime.strptime(datetime_string, '%Y-%m-%dT%H:%M:%SZ')
+    if type(datetime_string) is str:
+        return datetime.strptime(datetime_string, '%Y-%m-%dT%H:%M:%SZ')
+    else:
+        return datetime_string
 
 def run():  # Update data
     print('Starting fetching data')
@@ -99,8 +102,8 @@ def run():  # Update data
 
                     if not new_outcome:
                         new_outcome = create_outcome(outcome, new_market, new_bookmaker)
-                    elif convert_to_datetime(bookmaker['last_update']) > convert_to_datetime(new_bookmaker.last_update):
-                        new_outcome = update_outcome(new_outcome, outcome["multiplier"])
-                        new_bookmaker = update_bookmaker(new_bookmaker, bookmaker['last_update'])
+                    elif convert_to_datetime(bookmaker['lastUpdate']).timestamp() > convert_to_datetime(new_bookmaker.last_update).timestamp():
+                        new_outcome = update_outcome(new_outcome, outcome["price"])
+                        new_bookmaker = update_bookmaker(new_bookmaker, bookmaker['lastUpdate'])
 
                     print('Creating outcome')

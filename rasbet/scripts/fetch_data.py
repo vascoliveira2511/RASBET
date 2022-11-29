@@ -16,7 +16,7 @@ def get_data():  # Get data from API
     return games  # Return data
 
 def fecth_market(key):
-    market = Market.objects.get(key=key)
+    market = Market.objects.filter(key=key).first()
     return market
 
 def create_market(market):
@@ -31,7 +31,7 @@ def create_bookmaker(bookmaker, game):
     return bookmaker
 
 def fecth_bookmaker(key, game_id):
-    bookmaker = Bookmaker.objects.get(key=key, game_id=game_id)
+    bookmaker = Bookmaker.objects.filter(key=key, game_id=game_id).first()
     return bookmaker
 
 def create_game(game):
@@ -41,7 +41,7 @@ def create_game(game):
     return game
 
 def fecth_game(name):
-    game = Game.objects.get(name=name)
+    game = Game.objects.filter(name=name).first()
     return game
 
 def create_outcome(outcome, market, bookmaker):
@@ -50,7 +50,7 @@ def create_outcome(outcome, market, bookmaker):
     return outcome
 
 def fetch_outcome(result, market_id, bookmaker_id):
-    outcome = Outcome.objects.get(result=result, market_id=market_id, bookmaker_id=bookmaker_id)
+    outcome = Outcome.objects.filter(result=result, market_id=market_id, bookmaker_id=bookmaker_id).first()
     return outcome
 
 def update_outcome(outcome, multiplier):

@@ -11,4 +11,4 @@ class Game(models.Model):
     scores = models.CharField(max_length=100, default=None, null=True)
 
     def __str__(self):
-        return self.home_team + " " + self.away_team + " " + str(self.commance_time) + " " + str(self.completed) + " " + str(self.scores)
+        return self.home_team + " " + self.away_team + " " + str(self.commence_time) + " " + str(self.completed) + " " + str(self.scores)

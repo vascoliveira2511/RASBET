@@ -6,3 +6,6 @@ class GameViewSet(viewsets.ModelViewSet):
     queryset = Game.objects.all()
     serializer_class = GameSerializer
     permission_classes = []
+
+    def get_queryset(self):
+        return Game.objects.filter(completed=False)

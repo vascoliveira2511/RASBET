@@ -8,5 +8,5 @@ class TokenObtainPairSerializer(RFTokenObtainPairSerializer):
         token = super(TokenObtainPairSerializer, cls).get_token(user)
 
         # Add custom claims
-        token['username'] = user.username
+        token['id'] = user.id
         return token

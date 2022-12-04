@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import environ
 import dj_database_url
+from datetime import timedelta
 
 env = environ.Env()
 environ.Env.read_env()
@@ -147,3 +148,8 @@ AUTH_USER_MODEL = 'rasbet.User'
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
 ]
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+}

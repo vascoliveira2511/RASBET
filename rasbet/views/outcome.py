@@ -1,6 +1,8 @@
 from ..models import Outcome
 from ..serializers import OutcomeSerializer
 from rest_framework import viewsets, permissions
+from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
 
 class OutcomeViewSet(viewsets.ModelViewSet):
     queryset = Outcome.objects.all()
@@ -9,3 +11,8 @@ class OutcomeViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Outcome.objects.filter(bookmaker=self.request.query_params.get('bookmaker'))
+
+    def retrieve(self, request, pk=None):
+        outcome = get_object_or_404(self.queryset, pk=pk)
+        serializer = OutcomeSerializer(outcome)
+        return Response(serializer.data)

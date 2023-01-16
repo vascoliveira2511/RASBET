@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from .views import UserViewSet, TokenObtainPairView, RegisterView, BetViewSet, BookmakerViewSet, GameViewSet, MarketViewSet, OutcomeViewSet, WalletViewSet
+from .views import BetOutcomeViewSet, UserViewSet, TokenObtainPairView, RegisterView, BetViewSet, BookmakerViewSet, GameViewSet, MarketViewSet, OutcomeViewSet, WalletViewSet
 from rest_framework_simplejwt.views import TokenRefreshView
 
 
@@ -13,6 +13,7 @@ router.register(r'games', GameViewSet,basename="game")
 router.register(r'markets', MarketViewSet,basename="market")
 router.register(r'outcomes', OutcomeViewSet,basename="outcome")
 router.register(r'wallets', WalletViewSet,basename="wallet")
+router.register(r'bet_outcomes', BetOutcomeViewSet,basename="bet_outcome")
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.

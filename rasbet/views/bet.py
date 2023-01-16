@@ -6,3 +6,6 @@ class BetViewSet(viewsets.ModelViewSet):
     queryset = Bet.objects.all()
     serializer_class = BetSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Bet.objects.filter(user=self.request.user.id)

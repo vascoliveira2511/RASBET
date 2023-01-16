@@ -7,3 +7,4 @@ from .game import *
 from .market import *
 from .wallet import *
 from .outcome import *
+from .bet_outcome import *

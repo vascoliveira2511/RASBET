@@ -8,23 +8,16 @@ class BetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bet
         fields = [ 'id', 'stake', 'multiplier', 'prize', 'user', 'status', 'outcomes', 'time']
-        # extra_kwargs = {
-        #     "multiplier": {"required": False, "allow_null": True}, 
-        #     "prize": {"required": False, "allow_null": True},
-        #     "status": {"required": False, "allow_null": True},
-        #     "time": {"required": False, "allow_null": True}
-        #     }
+        extra_kwargs = {'time': {'read_only': True, 'required': False},'status': {'read_only': True, 'required': False}}
 
 
     def create(self, validated_data):
         outcomes_data = validated_data.pop('outcomes')
-        multiplier = 1
 
         for outcome_id in outcomes_data:
             outcome = Outcome.objects.get(pk=outcome_id)
-            multiplier *= outcome.multiplier
 
-        bet = Bet.objects.create(time=datetime.datetime.now(),multiplier=multiplier,prize=0**validated_data)
+        bet = Bet.objects.create(time=datetime.datetime.now(), **validated_data)
         for outcome_id in outcomes_data:
             outcome = Outcome.objects.get(pk=outcome_id)
             BetOutcome.objects.create(bet=bet, outcome=outcome)

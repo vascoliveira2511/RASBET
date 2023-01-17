@@ -8,4 +8,7 @@ class BetViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Bet.objects.filter(user=self.request.user.id)
+        if self.request.user.id:
+            return Bet.objects.filter(user=self.request.user.id)
+        else:
+            return Bet.objects.all()

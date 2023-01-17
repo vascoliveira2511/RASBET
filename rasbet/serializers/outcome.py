@@ -9,6 +9,8 @@ class OutcomeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Outcome
         fields = [ 'id', 'result', 'multiplier', 'market', 'bookmaker', 'home_team', 'away_team']
+        extra_kwargs = {'home_team': {'read_only': True, 'required': False}, 'away_team': {'read_only': True, 'required': False}}
+
 
     def get_home_team(self, obj):
         bookmaker = Bookmaker.objects.get(id=obj.bookmaker.id)

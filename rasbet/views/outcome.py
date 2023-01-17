@@ -10,9 +10,12 @@ class OutcomeViewSet(viewsets.ModelViewSet):
     permission_classes = []
 
     def get_queryset(self):
-        return Outcome.objects.filter(bookmaker=self.request.query_params.get('bookmaker'))
+        if self.request.query_params.get('bookmaker'):
+            return Outcome.objects.filter(bookmaker=self.request.query_params.get('bookmaker'))
+        else:
+            return Outcome.objects.all()
 
-    def retrieve(self, request, pk=None):
-        outcome = get_object_or_404(self.queryset, pk=pk)
-        serializer = OutcomeSerializer(outcome)
-        return Response(serializer.data)
+    # def retrieve(self, request, pk=None):
+    #     outcome = get_object_or_404(self.queryset, pk=pk)
+    #     serializer = OutcomeSerializer(outcome)
+    #     return Response(serializer.data)

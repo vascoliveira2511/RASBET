@@ -6,3 +6,5 @@ from .game import *
 from .market import *
 from .outcome import *
 from .bet_outcome import *
+from .event import *
+from .game_subscriber import *

@@ -8,3 +8,5 @@ from .game import *
 from .outcome import *
 from .market import *
 from .wallet import *
+from .event import *
+from .game_subscriber import *

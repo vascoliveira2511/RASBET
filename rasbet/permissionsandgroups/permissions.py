@@ -52,6 +52,11 @@ permission = Permission.objects.create(
    content_type = content_wallet
 )
 
+permission = Permission.objects.create(
+   codename ='can_mod_wallet',
+   name ='Can Modify Wallet',
+   content_type = content_wallet
+)
 
 admin_group, created = Group.objects.get_or_create(name='Admin')
 admin_group.permissions.set('can_mod_game', 'can_view_closed_games', 'can_view_open_games')
@@ -61,4 +66,4 @@ specialist_group.permissions.set('can_mod_outcomes', 'can_view_games_without_odd
 
 
 bet_user_group, created = Group.objects.get_or_create(name='Bet_User')
-bet_user_group.permissions.set('can_bet_game', 'can_view_open_games', 'can_view_wallet')
+bet_user_group.permissions.set('can_bet_game', 'can_view_open_games', 'can_view_wallet', 'can_mod_wallet')

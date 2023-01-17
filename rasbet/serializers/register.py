@@ -37,6 +37,16 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         
         user.set_password(validated_data['password'])
+        
+        #If user is admin -> user.groups.add(admin_group)
+        #If user is specialist -> user.groups.add(specialist_group)
+        #else -> user.groups.add(bet_user_group)
+        
+        
         user.save()
+        
+        
+        
+        
 
         return user

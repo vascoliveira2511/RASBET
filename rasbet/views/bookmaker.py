@@ -8,4 +8,7 @@ class BookmakerViewSet(viewsets.ModelViewSet):
     permission_classes = []
 
     def get_queryset(self):
-        return Bookmaker.objects.filter(game=self.request.query_params.get('game'), key=self.request.query_params.get('key'))
+        if self.request.query_params.get('key'):
+            return Bookmaker.objects.filter(game=self.request.query_params.get('game'), key=self.request.query_params.get('key'))
+        else:
+            return Bookmaker.objects.filter(game=self.request.query_params.get('game'))
